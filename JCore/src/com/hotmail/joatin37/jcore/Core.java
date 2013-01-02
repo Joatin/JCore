@@ -34,13 +34,9 @@
 package com.hotmail.joatin37.jcore;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
-import java.util.logging.Level;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -57,45 +53,28 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 	private final CollectionManager manager;
 	private FileConfiguration config = null;
 	private File configfile = null;
-	private final JavaPlugin plugin;
 	private boolean skipsave = false;
 	private BlockEditMode editmode;
 	private WebSite webSite;
 
-	public Core(JavaPlugin plugin) {
-		this.plugin = plugin;
+	public Core() {
 		this.webpages = new HashMap<String, WebPage>();
 		this.extensions = new HashMap<String, Extension>();
-		this.manager = new CollectionManager(this.plugin, this);
-	}
-
-	public void sendCoreInfoMessage(String message) {
-		this.plugin.getLogger().info("[Core] " + message);
-	}
-
-	public void sendCoreWarningMessage(String message) {
-		this.plugin.getLogger().warning("[Core] " + message);
-	}
-
-	public void sendCoreSevereMessage(String message) {
-		this.plugin.getLogger().severe("[Core] " + message);
+		this.manager = new CollectionManager(this, this);
 	}
 
 	public Extension getExtension(String plugin) {
 		Extension ex = this.extensions.get(plugin);
 		if (ex == null && this.getConfig().getBoolean("safemode", true)) {
-			this.sendCoreSevereMessage(plugin
-					+ " was missing, its collections and/or plots couldn't be created, shuting down. If you want to continue anyway, disable \"safemode\" in the coreconfig.yml");
+			this.getLogger()
+					.severe(plugin
+							+ " was missing, its collections and/or plots couldn't be created, shuting down. If you want to continue anyway, disable \"safemode\" in the coreconfig.yml");
 			this.skipsave = true;
-			this.plugin.getServer().shutdown();
+			this.getServer().shutdown();
 			return null;
 		} else {
 			return ex;
 		}
-	}
-
-	public JavaPlugin getPlugin() {
-		return this.plugin;
 	}
 
 	@Override
@@ -107,49 +86,15 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 		this.webpages.put(page.getName(), page);
 	}
 
-	public void init() {
+	@Override
+	public void onEnable() {
+		this.saveDefaultConfig();
 		this.manager.onInit();
 		this.editmode = new BlockEditMode(this);
-		this.reloadConfig();
-		if (this.getConfig().getBoolean("website", false)) {
+		if (this.getConfig().getBoolean("website.enabled", false)) {
 			this.webSite = new WebSite(this);
 		}
 
-	}
-
-	public void reloadConfig() {
-		if (this.configfile == null) {
-			this.configfile = new File(this.plugin.getDataFolder(),
-					"coreconfig.yml");
-		}
-		this.config = YamlConfiguration.loadConfiguration(this.configfile);
-
-		// Look for defaults in the jar
-		InputStream defConfigStream = this.plugin.getResource("coreconfig.yml");
-		if (defConfigStream != null) {
-			YamlConfiguration defConfig = YamlConfiguration
-					.loadConfiguration(defConfigStream);
-			this.config.setDefaults(defConfig);
-		}
-	}
-
-	public FileConfiguration getConfig() {
-		if (this.config == null) {
-			this.reloadConfig();
-		}
-		return this.config;
-	}
-
-	public void saveConfig() {
-		if (this.config == null || this.configfile == null) {
-			return;
-		}
-		try {
-			this.getConfig().save(this.configfile);
-		} catch (IOException ex) {
-			this.plugin.getLogger().log(Level.SEVERE,
-					"Could not save config to " + this.configfile, ex);
-		}
 	}
 
 	@Override
@@ -161,7 +106,6 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 		this.saveConfig();
 		this.manager.save();
 		if (this.webSite != null) {
-			this.webSite.save();
 		}
 	}
 }

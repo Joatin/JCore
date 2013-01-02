@@ -35,13 +35,10 @@ package com.hotmail.joatin37.jcore.website;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Level;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.hotmail.joatin37.jcore.Core;
 
@@ -55,14 +52,13 @@ public class WebSite implements Runnable {
 	private Thread thread;
 
 	public WebSite(Core core) {
-		this.manager = new WebPageManager(core.getPlugin(), core);
+		this.manager = new WebPageManager(core);
 		this.core = core;
-		this.getConfig();
 		try {
-			this.socket = new ServerSocket(this.getConfig().getInt("port", 443));
+			this.socket = new ServerSocket(this.core.getConfig().getInt(
+					"website.port", 443));
 		} catch (IOException e) {
-			core.getPlugin()
-					.getLogger()
+			core.getLogger()
 					.warning(
 							"[WebSite] Couldn't create the websocket. Please check your firewall settings.");
 
@@ -77,8 +73,7 @@ public class WebSite implements Runnable {
 		while (true) {
 			try {
 				Socket csocket = this.socket.accept();
-				this.core.getPlugin().getLogger()
-						.info("[WebSite] New connection!!!");
+				this.core.getLogger().info("[WebSite] New connection!!!");
 				this.manager.handleConnection(csocket);
 
 			} catch (IOException e) {
@@ -88,47 +83,4 @@ public class WebSite implements Runnable {
 		}
 	}
 
-	public void save() {
-		this.saveConfig();
-	}
-
-	public void reloadConfig() {
-		if (this.configfile == null) {
-			this.configfile = new File(this.core.getPlugin().getDataFolder(),
-					"website.yml");
-		}
-		this.config = YamlConfiguration.loadConfiguration(this.configfile);
-
-		// Look for defaults in the jar
-		InputStream defConfigStream = this.core.getPlugin().getResource(
-				"website.yml");
-		if (defConfigStream != null) {
-			YamlConfiguration defConfig = YamlConfiguration
-					.loadConfiguration(defConfigStream);
-			this.config.setDefaults(defConfig);
-		}
-	}
-
-	public FileConfiguration getConfig() {
-		if (this.config == null) {
-			this.reloadConfig();
-		}
-		return this.config;
-	}
-
-	public void saveConfig() {
-		if (this.config == null || this.configfile == null) {
-			return;
-		}
-		try {
-			this.getConfig().save(this.configfile);
-		} catch (IOException ex) {
-			this.core
-					.getPlugin()
-					.getLogger()
-					.log(Level.SEVERE,
-							"[WebSite] Could not save config to "
-									+ this.configfile, ex);
-		}
-	}
 }

@@ -63,7 +63,9 @@ public class ConnectionHandler extends Thread {
 			}
 
 			String[] s;
-			while (!(s = input.readLine().split(" "))[0].equals("\r\n")) {
+			String s5;
+			while ((s5 = input.readLine()) != null) {
+				s = s5.split(" ");
 				if (s[0].toUpperCase().startsWith(
 						"Accept-Language".toUpperCase())) {
 					this.preferedlang = s[1].split(",")[0];

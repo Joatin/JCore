@@ -6,19 +6,15 @@ import java.net.Socket;
 import java.util.List;
 import java.util.Vector;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
 import com.hotmail.joatin37.jcore.Core;
 
 public class WebPageManager implements Runnable {
 
-	final JavaPlugin plugin;
 	private final Core core;
 	private final List<ConnectionHandler> connections;
 
-	public WebPageManager(JavaPlugin plugin, Core core) {
+	public WebPageManager(Core core) {
 		this.core = core;
-		this.plugin = plugin;
 		this.connections = new Vector<ConnectionHandler>();
 	}
 
