@@ -40,7 +40,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.hotmail.joatin37.jcore.api.Extension;
+import com.hotmail.joatin37.jcore.api.ExtensionHandler;
 import com.hotmail.joatin37.jcore.api.ICollectionManager;
 import com.hotmail.joatin37.jcore.api.ICore;
 import com.hotmail.joatin37.jcore.api.WebPage;
@@ -48,7 +48,7 @@ import com.hotmail.joatin37.jcore.website.WebSite;
 
 public final class Core extends JavaPlugin implements ICore, Listener {
 
-	private final HashMap<String, Extension> extensions;
+	private final HashMap<String, ExtensionHandler> extensionHandlers;
 	private final HashMap<String, WebPage> webpages;
 	private final CollectionManager manager;
 	private FileConfiguration config = null;
@@ -56,15 +56,17 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 	private boolean skipsave = false;
 	private BlockEditMode editmode;
 	private WebSite webSite;
+	private static boolean DEBUGG = false;
 
 	public Core() {
+		DEBUGG = true;
 		this.webpages = new HashMap<String, WebPage>();
-		this.extensions = new HashMap<String, Extension>();
+		this.extensionHandlers = new HashMap<String, ExtensionHandler>();
 		this.manager = new CollectionManager(this, this);
 	}
 
-	public Extension getExtension(String plugin) {
-		Extension ex = this.extensions.get(plugin);
+	public ExtensionHandler getExtension(String plugin) {
+		ExtensionHandler ex = this.extensionHandlers.get(plugin);
 		if (ex == null && this.getConfig().getBoolean("safemode", true)) {
 			this.getLogger()
 					.severe(plugin
@@ -77,9 +79,18 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 		}
 	}
 
+	public static boolean isDebugg() {
+		return DEBUGG;
+	}
+
 	@Override
-	public void addExtension(Extension extension, JavaPlugin plugin) {
-		this.extensions.put(plugin.getName(), extension);
+	public void addExtension(ExtensionHandler extensionHandler,
+			JavaPlugin plugin) {
+		this.extensionHandlers.put(plugin.getName(), extensionHandler);
+		this.getLogger().info(
+				plugin.getDescription().getName() + " "
+						+ plugin.getDescription().getVersion()
+						+ " was succesfully hooked!");
 	}
 
 	public void addWebPage(WebPage page) {
@@ -95,6 +106,11 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 			this.webSite = new WebSite(this);
 		}
 
+	}
+
+	@Override
+	public void onDisable() {
+		this.save();
 	}
 
 	@Override

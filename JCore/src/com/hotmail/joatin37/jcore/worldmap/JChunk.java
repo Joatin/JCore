@@ -40,8 +40,8 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 
+import com.hotmail.joatin37.jcore.Core;
 import com.hotmail.joatin37.jcore.api.ICollectionManager;
-
 
 public class JChunk extends HashMap<BlockPos, BlockRow1> {
 
@@ -56,6 +56,9 @@ public class JChunk extends HashMap<BlockPos, BlockRow1> {
 	public JChunk(int x, int z, ICollectionManager manager) {
 		this.x = x;
 		this.z = z;
+		if (manager == null) {
+			throw new NullPointerException();
+		}
 		this.manager = manager;
 
 	}
@@ -111,6 +114,10 @@ public class JChunk extends HashMap<BlockPos, BlockRow1> {
 					continue;
 				}
 				UUID collection = new UUID(c1, c2);
+				if (Core.isDebugg()) {
+					System.out.println(c1 + ";" + c2);
+					System.out.print(this.manager == null);
+				}
 				this.manager.getCollection(collection).addLandMass();
 				UUID plot = null;
 				if (p1 != 0 && p2 != 0) {
@@ -130,8 +137,8 @@ public class JChunk extends HashMap<BlockPos, BlockRow1> {
 	}
 
 	public byte[] getBytes() {
-		ByteBuffer buff = ByteBuffer
-				.wrap(new byte[(this.size() * BlockRow1.Size) + 8]);
+		ByteBuffer buff = ByteBuffer.wrap(new byte[this.size() * BlockRow1.Size
+				+ 8]);
 		buff.putInt(this.x);
 		buff.putInt(this.z);
 		Iterator<BlockRow1> it = this.values().iterator();

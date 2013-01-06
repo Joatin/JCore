@@ -37,7 +37,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public interface ICore {
 
-	public void addExtension(Extension extension, JavaPlugin plugin);
+	public void addExtension(ExtensionHandler extensionHandler, JavaPlugin plugin);
 
 	public ICollectionManager getManager();
 }

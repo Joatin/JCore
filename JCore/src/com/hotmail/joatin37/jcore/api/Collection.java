@@ -176,7 +176,7 @@ public abstract class Collection {
 	private final UUID uuid;
 	private String name;
 	private String owner;
-	private final Extension plugin;
+	private final ExtensionHandler extension;
 	private final ICollectionManager manager;
 	private HashMap<UUID, Plot> plots;
 	private HashMap<Player, Plot> playersinside;
@@ -213,17 +213,17 @@ public abstract class Collection {
 	 *            The ICollectionManager that manages this collection
 	 * @param uuid
 	 *            The uuid for this collection.
-	 * @param plugin
+	 * @param extension
 	 *            The plugin that constructs this plugin
 	 * @param loadfile
 	 *            The Yaml file used to restore data for this collection
 	 * @since 1.0.0
 	 */
-	public Collection(ICollectionManager manager, UUID uuid,
-			Extension plugin, FileConfiguration loadfile) {
-		this.plugin = plugin;
+	public Collection(UUID uuid, ExtensionHandler extension,
+			FileConfiguration loadfile) {
+		this.extension = extension;
 		this.uuid = uuid;
-		this.manager = manager;
+		this.manager = extension.getICollectionManager();
 		this.name = loadfile.getString(JUtil.uuidToString(uuid) + ".name");
 		List<String> list = loadfile.getStringList(JUtil.uuidToString(uuid)
 				+ ".plots");
@@ -233,17 +233,19 @@ public abstract class Collection {
 		Iterator<String> it = list.listIterator();
 		while (it.hasNext()) {
 			String s = it.next();
-			this.plots.put(JUtil.stringToUUID(s),
-					manager.reconstructPlot(JUtil.getPluginFromUuidString(s),
+			this.plots.put(
+					JUtil.stringToUUID(s),
+					this.manager.reconstructPlot(
+							JUtil.getPluginFromUuidString(s),
 							JUtil.getTypeFromUuidString(s), this,
 							JUtil.stringToUUID(s)));
 		}
 	}
 
-	public Collection(ICollectionManager manager, UUID uuid,
-			Extension plugin, String name, String owner) {
-		this.manager = manager;
-		this.plugin = plugin;
+	public Collection(UUID uuid, ExtensionHandler extension, String name,
+			String owner) {
+		this.manager = extension.getICollectionManager();
+		this.extension = extension;
 		this.uuid = uuid;
 		this.name = name;
 		this.owner = owner;
@@ -281,7 +283,7 @@ public abstract class Collection {
 	 * @return A String with the collections name.
 	 */
 	public String getPluginName() {
-		return this.plugin.getName();
+		return this.extension.getName();
 	}
 
 	/**
@@ -785,7 +787,8 @@ public abstract class Collection {
 	}
 
 	public final void PlayerMoveEvent(PlayerMoveEvent event, BlockRow1 row) {
-		event.getPlayer().sendMessage("§4Moving!");
+		// TODO just temp
+		this.onPlayerMoveEvent(event);
 	}
 
 	public final void PlayerQuitEvent(PlayerQuitEvent event, BlockRow1 row) {
@@ -1321,6 +1324,10 @@ public abstract class Collection {
 	}
 
 	public void onPlayerPortalEvent(PlayerPortalEvent event) {
+
+	}
+
+	public void onPlayerMoveEvent(PlayerMoveEvent event) {
 
 	}
 

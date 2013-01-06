@@ -35,6 +35,7 @@ package com.hotmail.joatin37.jcore.api;
 
 import java.util.UUID;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -50,10 +51,29 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @since 1.0.0
  * 
  */
-public interface Extension {
+public abstract class ExtensionHandler {
 
+	private final JavaPlugin plugin;
+	private final ICore core;
+	private final ICollectionManager manager;
+	private final IWorldMap map;
 
-	
+	public ExtensionHandler(JavaPlugin plugin) {
+		this.plugin = plugin;
+		this.core = (ICore) plugin.getServer().getPluginManager()
+				.getPlugin("JCore");
+		this.core.addExtension(this, plugin);
+		this.manager = this.core.getManager();
+		this.map = this.manager.getWorldMap();
+	}
+
+	public ICollectionManager getICollectionManager() {
+		return this.manager;
+	}
+
+	public void addCollection(Collection coll, Location baseloc) {
+		this.manager.putNewCollection(coll, baseloc);
+	}
 
 	/**
 	 * This method will be called from the CollectionManager in order to
@@ -71,11 +91,19 @@ public interface Extension {
 	 * 
 	 * @since 1.0.0
 	 */
-	public Collection constructCollection(String kind,
+	public abstract Collection constructCollection(String kind,
 			ICollectionManager parent, UUID uuid, FileConfiguration config);
 
-	public Plot constructPlot(String kind, Collection parent, UUID uuid);
+	public abstract Plot constructPlot(String kind, Collection parent, UUID uuid);
 
-	public String getName();
+	/**
+	 * This method should return the plugins name.
+	 * 
+	 * @return The plugins name
+	 * @since 1.0.0
+	 */
+	public String getName() {
+		return this.plugin.getName();
+	}
 
 }

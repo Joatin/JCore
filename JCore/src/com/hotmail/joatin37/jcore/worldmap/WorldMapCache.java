@@ -54,6 +54,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.io.Files;
 import com.hotmail.joatin37.jcore.ChunkPos;
+import com.hotmail.joatin37.jcore.Core;
 import com.hotmail.joatin37.jcore.api.Collection;
 import com.hotmail.joatin37.jcore.api.ICollectionManager;
 import com.hotmail.joatin37.jcore.api.Plot;
@@ -75,23 +76,25 @@ public class WorldMapCache extends LinkedHashMap<ChunkPos, JChunk> {
 
 	private final File savefile;
 
-	private final JavaPlugin jtown;
+	private final JavaPlugin core;
 
 	private final String world;
 
 	private final ICollectionManager manager;
 
-	public WorldMapCache(int maxcapacity, File file, JavaPlugin jtown,
+	public WorldMapCache(int maxcapacity, File file, JavaPlugin core,
 			String world, ICollectionManager manager) {
 		super(maxcapacity, 0.75f, true);
 		this.world = world;
 		this.MAX_ENTRIES = maxcapacity;
 		this.savefile = file;
-		this.jtown = jtown;
+		this.core = core;
+		this.manager = manager;
+		if (this.manager == null) {
+			throw new NullPointerException();
+		}
 		this.allchunks = this.loadAllReferences();
 		this.dirtychunks = new HashMap<ChunkPos, JChunk>();
-		this.manager = manager;
-
 	}
 
 	protected void putJ(ChunkPos key, JChunk value) {
@@ -185,8 +188,10 @@ public class WorldMapCache extends LinkedHashMap<ChunkPos, JChunk> {
 				Iterator<JChunk> dirty = this.dirtychunks.values().iterator();
 				while (dirty.hasNext()) {
 					byte[] w = dirty.next().getBytes();
-					this.jtown.getLogger().info(
-							"Writing bytes of lenght" + w.length);
+					if (Core.isDebugg()) {
+						this.core.getLogger().info(
+								"Writing bytes of lenght" + w.length);
+					}
 					output.writeInt(w.length);
 					output.write(w);
 				}
@@ -207,9 +212,15 @@ public class WorldMapCache extends LinkedHashMap<ChunkPos, JChunk> {
 	private List<ChunkPos> loadAllReferences() {
 		Vector<ChunkPos> vec = null;
 		DataInputStream input;
+		if (this.manager == null) {
+			throw new NullPointerException();
+		}
 		try {
 			input = new DataInputStream(new FileInputStream(this.savefile));
-			input.readInt(); // reads the version number;
+			int i1 = input.readInt(); // reads the version number;
+			if (Core.isDebugg()) {
+				this.core.getLogger().info("" + i1);
+			}
 			vec = new Vector<ChunkPos>(100, 20);
 			try {
 				while (true) {
@@ -227,7 +238,7 @@ public class WorldMapCache extends LinkedHashMap<ChunkPos, JChunk> {
 				input.close();
 			}
 		} catch (FileNotFoundException e) {
-			this.jtown.getLogger().warning(
+			this.core.getLogger().warning(
 					"The file " + this.savefile + " was missing");
 		} catch (IOException e) {
 
@@ -289,7 +300,7 @@ public class WorldMapCache extends LinkedHashMap<ChunkPos, JChunk> {
 					return null;
 				}
 			} catch (FileNotFoundException e) {
-				this.jtown.getLogger().warning(
+				this.core.getLogger().warning(
 						"No the file " + this.savefile + " was missing");
 				this.savefile.mkdir();
 			} catch (IOException e) {
