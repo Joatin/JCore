@@ -174,7 +174,6 @@ import com.hotmail.joatin37.jcore.api.Plot;
 import com.hotmail.joatin37.jcore.worldmap.BlockRow1;
 import com.hotmail.joatin37.jcore.worldmap.WorldMap;
 
-
 public final class CollectionManager implements Listener, ICollectionManager {
 
 	private HashMap<UUID, Collection> collections;
@@ -276,6 +275,12 @@ public final class CollectionManager implements Listener, ICollectionManager {
 					JUtil.getPluginFromUuidString(s),
 					JUtil.getTypeFromUuidString(s), JUtil.stringToUUID(s));
 			this.collections.put(JUtil.stringToUUID(s), coll);
+			if (Core.isDebugg()) {
+				this.core.getLogger().info(
+						coll.getName() + " was constructed, with the uuid: "
+								+ JUtil.uuidToString(coll.getUUID()));
+				this.collections.get(JUtil.stringToUUID(s)).addLandMass();
+			}
 		}
 
 	}
@@ -1016,7 +1021,6 @@ public final class CollectionManager implements Listener, ICollectionManager {
 
 	@EventHandler
 	public void onPlayerMoveEvent(PlayerMoveEvent event) {
-
 		BlockRow1 row1 = this.worldmap.get(event.getFrom());
 		BlockRow1 row2 = this.worldmap.get(event.getTo());
 		if (row1 != null) {
