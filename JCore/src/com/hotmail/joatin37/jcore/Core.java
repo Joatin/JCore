@@ -34,7 +34,9 @@
 package com.hotmail.joatin37.jcore;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
@@ -44,6 +46,8 @@ import com.hotmail.joatin37.jcore.api.ExtensionHandler;
 import com.hotmail.joatin37.jcore.api.ICollectionManager;
 import com.hotmail.joatin37.jcore.api.ICore;
 import com.hotmail.joatin37.jcore.api.WebPage;
+import com.hotmail.joatin37.jcore.sql.SQLManager;
+import com.hotmail.joatin37.jcore.util.GraphCollector;
 import com.hotmail.joatin37.jcore.website.WebSite;
 
 public final class Core extends JavaPlugin implements ICore, Listener {
@@ -54,9 +58,11 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 	private FileConfiguration config = null;
 	private File configfile = null;
 	private boolean skipsave = false;
-	private BlockEditMode editmode;
 	private WebSite webSite;
 	private static boolean DEBUGG = false;
+	private GraphCollector metrics;
+	private SQLManager sql;
+	private static Core core;
 
 	public Core() {
 		DEBUGG = true;
@@ -83,6 +89,10 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 		return DEBUGG;
 	}
 
+	public Set<String> getExtensionNames() {
+		return Collections.unmodifiableSet(this.extensionHandlers.keySet());
+	}
+
 	@Override
 	public void addExtension(ExtensionHandler extensionHandler,
 			JavaPlugin plugin) {
@@ -98,14 +108,37 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 	}
 
 	@Override
+	public void onLoad() {
+		Core.core = this;
+		new Lang().setup(this,
+				this.getConfig().getString("lang.language", "en-US"), this
+						.getConfig().getBoolean("lang.custom", false));
+		if (this.getConfig().getBoolean("sql.enable", false)) {
+			this.sql = new SQLManager(this);
+			if (Core.isDebugg()) {
+				this.getLogger().info("Created the sql instance");
+			}
+		} else {
+			if (Core.isDebugg()) {
+				this.getLogger().info("Didn't create the sql instance");
+			}
+		}
+	}
+
+	public static void sendDebug(String message) {
+		if (Core.core != null && Core.isDebugg()) {
+			core.getLogger().info("[DEBUG] " + message);
+		}
+	}
+
+	@Override
 	public void onEnable() {
 		this.saveDefaultConfig();
 		this.manager.onInit();
-		this.editmode = new BlockEditMode(this);
 		if (this.getConfig().getBoolean("website.enabled", false)) {
 			this.webSite = new WebSite(this);
 		}
-
+		this.metrics = new GraphCollector(this);
 	}
 
 	@Override

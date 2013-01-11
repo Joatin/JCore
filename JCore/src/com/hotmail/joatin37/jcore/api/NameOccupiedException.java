@@ -33,7 +33,11 @@
 
 package com.hotmail.joatin37.jcore.api;
 
-public abstract class WebPage {
+public class NameOccupiedException extends Exception {
 
-	public abstract String getName();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 }

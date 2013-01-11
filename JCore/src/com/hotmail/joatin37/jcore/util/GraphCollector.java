@@ -31,9 +31,50 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore.api;
+package com.hotmail.joatin37.jcore.util;
 
-public abstract class WebPage {
+import java.io.IOException;
+import java.util.Iterator;
 
-	public abstract String getName();
+import com.hotmail.joatin37.jcore.Core;
+import com.hotmail.joatin37.jcore.util.BukkitMetrics.Graph;
+
+public class GraphCollector {
+	private BukkitMetrics metrics;
+	private final Core core;
+
+	public GraphCollector(Core core) {
+		this.core = core;
+
+		try {
+			this.metrics = new BukkitMetrics(this.core);
+			this.metrics.start();
+		} catch (IOException e) {
+			if (Core.isDebugg()) {
+				core.getLogger().info("Couldn't create metrics");
+			}
+		}
+		this.CreateExtensionGraph();
+
+	}
+
+	public void CreateExtensionGraph() {
+		Graph graph = this.metrics.createGraph("Plugins using JCore");
+		Iterator<String> it = this.core.getExtensionNames().iterator();
+		while (it.hasNext()) {
+			graph.addPlotter(new exPlotter(it.next()));
+		}
+		this.metrics.addGraph(graph);
+	}
+
+	public class exPlotter extends BukkitMetrics.Plotter {
+		protected exPlotter(String name) {
+			super(name);
+		}
+
+		@Override
+		public int getValue() {
+			return 1;
+		}
+	}
 }

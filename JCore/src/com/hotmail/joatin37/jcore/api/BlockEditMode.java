@@ -31,7 +31,7 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore;
+package com.hotmail.joatin37.jcore.api;
 
 import java.util.Iterator;
 import java.util.List;
@@ -40,15 +40,9 @@ import java.util.Vector;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.hotmail.joatin37.jcore.api.Collection;
-import com.hotmail.joatin37.jcore.api.IWorldMap;
-import com.hotmail.joatin37.jcore.api.Plot;
-
-
-class EditHolder implements Runnable {
+public final class BlockEditMode implements Runnable {
 	private boolean pinswitch = true;
 	private boolean drawpin = true;
 	private boolean draw = true;
@@ -60,31 +54,33 @@ class EditHolder implements Runnable {
 	private Collection coll;
 	private Player player;
 	private Plot plot;
-	private JavaPlugin plugin;
+	private ExtensionHandler extension;
 	private BukkitTask task;
 
-	protected EditHolder(JavaPlugin plugin, Player player, Collection coll,
-			IWorldMap map) {
+	public BlockEditMode(ExtensionHandler extension, Player player,
+			Collection coll) {
 		this.coll = coll;
-		this.map = map;
-		this.plugin = plugin;
+		this.map = extension.getICollectionManager().getWorldMap();
+		this.extension = extension;
 		this.player = player;
 		this.markedarea = new Vector<simpleblockrow>();
-		this.task = plugin.getServer().getScheduler()
-				.runTaskTimer(plugin, this, 0, 20);
+	}
+
+	public void start() {
+		this.task = this.extension.getPlugin().getServer().getScheduler()
+				.runTaskTimer(this.extension.getPlugin(), this, 0, 40);
 	}
 
 	public void Stop() {
-		this.plugin.getServer().getScheduler()
+		this.extension.getPlugin().getServer().getScheduler()
 				.cancelTask(this.task.getTaskId());
 	}
 
-	protected EditHolder(JavaPlugin plugin, Player player, Plot plot,
-			IWorldMap map) {
+	public BlockEditMode(ExtensionHandler extension, Player player, Plot plot) {
 		this.coll = plot.getParent();
 		this.plot = plot;
-		this.map = map;
-		this.plugin = plugin;
+		this.map = extension.getICollectionManager().getWorldMap();
+		this.extension = extension;
 		this.player = player;
 	}
 
@@ -101,11 +97,11 @@ class EditHolder implements Runnable {
 		if (this.coll != null && this.plot == null) {
 			if (this.map.canSet(loc)) {
 				if (this.pinswitch) {
-					this.pinpointa = loc;
+					this.pinpointa = loc.subtract(0, 1, 0);
 					this.pinswitch = false;
 					return true;
 				} else {
-					this.pinpointb = loc;
+					this.pinpointb = loc.subtract(0, 1, 0);
 					this.pinswitch = true;
 					return true;
 				}
@@ -116,11 +112,11 @@ class EditHolder implements Runnable {
 			if (this.coll != null && this.plot != null) {
 				if (this.map.canSet(loc, this.plot.getParent())) {
 					if (this.pinswitch) {
-						this.pinpointa = loc;
+						this.pinpointa = loc.subtract(0, 1, 0);
 						this.pinswitch = false;
 						return true;
 					} else {
-						this.pinpointb = loc;
+						this.pinpointb = loc.subtract(0, 1, 0);
 						this.pinswitch = true;
 						return true;
 					}
@@ -139,20 +135,21 @@ class EditHolder implements Runnable {
 			while (it.hasNext()) {
 				simpleblockrow row = it.next();
 				for (int i = row.getMinheight(); i <= row.getMaxheight(); i++) {
-					Location loc = new Location(this.plugin.getServer()
-							.getWorld(row.getWorld()), row.getX(), 0,
-							row.getZ());
-					if (loc.getBlock().getType() != Material.AIR) {
+					Location loc = new Location(this.extension.getPlugin()
+							.getServer().getWorld(row.getWorld()), row.getX(),
+							0, row.getZ());
+					if (loc.getBlock().getType().getId() != 0) {
 						this.player.sendBlockChange(
-								new Location(this.plugin.getServer().getWorld(
-										row.getWorld()), row.getX(), 0, row
-										.getZ()), Material.WOOL, (byte) 4);
+								new Location(this.extension.getPlugin()
+										.getServer().getWorld(row.getWorld()),
+										row.getX(), 0, row.getZ()),
+								Material.WOOL, (byte) 4);
 					}
 				}
 			}
 			if (this.pinpointa != null) {
 				this.player.sendBlockChange(this.pinpointa, Material.WOOL,
-						(byte) 1);
+						(byte) 3);
 			}
 			this.draw = false;
 		} else {
@@ -160,16 +157,21 @@ class EditHolder implements Runnable {
 			while (it.hasNext()) {
 				simpleblockrow row = it.next();
 				for (int i = row.getMinheight(); i <= row.getMaxheight(); i++) {
-					Location loc = new Location(this.plugin.getServer()
-							.getWorld(row.getWorld()), row.getX(), 0,
-							row.getZ());
+					Location loc = new Location(this.extension.getPlugin()
+							.getServer().getWorld(row.getWorld()), row.getX(),
+							0, row.getZ());
 					if (loc.getBlock().getType() != Material.AIR) {
 						this.player.sendBlockChange(
-								new Location(this.plugin.getServer().getWorld(
-										row.getWorld()), row.getX(), 0, row
-										.getZ()), Material.WOOL, (byte) 6);
+								new Location(this.extension.getPlugin()
+										.getServer().getWorld(row.getWorld()),
+										row.getX(), 0, row.getZ()),
+								Material.WOOL, (byte) 6);
 					}
 				}
+			}
+			if (this.pinpointa != null) {
+				this.player.sendBlockChange(this.pinpointa, Material.WOOL,
+						(byte) 2);
 			}
 			this.draw = true;
 		}
@@ -186,7 +188,7 @@ class EditHolder implements Runnable {
 			result = prime * result + this.maxheight;
 			result = prime * result + this.minheight;
 			result = prime * result
-					+ ((this.world == null) ? 0 : this.world.hashCode());
+					+ (this.world == null ? 0 : this.world.hashCode());
 			result = prime * result + this.x;
 			result = prime * result + this.z;
 			return result;
@@ -264,8 +266,8 @@ class EditHolder implements Runnable {
 			return this.world;
 		}
 
-		private EditHolder getOuterType() {
-			return EditHolder.this;
+		private BlockEditMode getOuterType() {
+			return BlockEditMode.this;
 		}
 
 	}

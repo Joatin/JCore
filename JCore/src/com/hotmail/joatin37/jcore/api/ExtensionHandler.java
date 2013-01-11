@@ -67,6 +67,10 @@ public abstract class ExtensionHandler {
 		this.map = this.manager.getWorldMap();
 	}
 
+	public JavaPlugin getPlugin() {
+		return this.plugin;
+	}
+
 	public ICollectionManager getICollectionManager() {
 		return this.manager;
 	}

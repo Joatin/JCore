@@ -1,4 +1,13 @@
 name: JCore
-version: 0.1.0
+version: 1.0.0
 main: com.hotmail.joatin37.jcore.Core
 author: Joatin
+load: POSTWORLD
+description: A landmanagement system for bukkit, plus some more extra.
+commands:
+  JCore:
+    aliases: [core]
+    description: This is a demo command.
+    usage: /<command> arg
+    permission: 
+    permission-message: You don't have <permission> 

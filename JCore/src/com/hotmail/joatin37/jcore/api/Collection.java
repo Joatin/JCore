@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.Vector;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -181,6 +182,8 @@ public abstract class Collection {
 	private HashMap<UUID, Plot> plots;
 	private HashMap<Player, Plot> playersinside;
 	private int landmass = 0;
+	private static int totallandmass = 0;
+	private static List<String> names = new Vector<String>();
 
 	public Plot getPlot(UUID uuid) {
 		return this.plots.get(uuid);
@@ -188,10 +191,16 @@ public abstract class Collection {
 
 	public void addLandMass() {
 		this.landmass++;
+		Collection.totallandmass++;
 	}
 
 	public void removeLandMass() {
 		this.landmass--;
+		Collection.totallandmass--;
+	}
+
+	public static int getTotalLandMass() {
+		return Collection.totallandmass;
 	}
 
 	public int getLandMass() {
@@ -243,12 +252,32 @@ public abstract class Collection {
 	}
 
 	public Collection(UUID uuid, ExtensionHandler extension, String name,
-			String owner) {
+			String owner) throws NameOccupiedException {
+		if (owner == null) {
+			throw new NullPointerException();
+		}
+		if (extension == null) {
+			throw new NullPointerException();
+		}
+		if (uuid == null) {
+			throw new NullPointerException();
+		}
+		if (name == null) {
+			throw new NullPointerException();
+		}
+		if (names.contains(name)) {
+			throw new NameOccupiedException();
+		}
+
 		this.manager = extension.getICollectionManager();
 		this.extension = extension;
 		this.uuid = uuid;
 		this.name = name;
 		this.owner = owner;
+	}
+
+	public static List getOccupiedNames() {
+		return Collection.names;
 	}
 
 	/**

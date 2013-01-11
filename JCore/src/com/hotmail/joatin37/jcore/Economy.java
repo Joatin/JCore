@@ -37,11 +37,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.greatmancode.craftconomy3.converter.converters.Craftconomy2;
-import com.hotmail.joatin37.jcore.api.IEconomy;
 
 import cosine.boseconomy.BOSEconomy;
 
-public class Economy implements IEconomy {
+public final class Economy {
 
 	private BOSEconomy boseconomy;
 	private Craftconomy2 craftconomy;
@@ -53,18 +52,17 @@ public class Economy implements IEconomy {
 		this.core = core;
 	}
 
-	public void loadBOSEconomy() {
-		// Attempt to get the plugin instance for BOSEconomy.
-		Plugin temp = this.core.getServer().getPluginManager()
-				.getPlugin("BOSEconomy");
-
-		// Check whether BOSEconomy is loaded.
-		if (temp == null) {
-			// BOSEconomy is not loaded on the server.
-			this.core = null;
-		} else {
-			// BOSEconomy is now stored in the "economy" variable.
+	public void init() {
+		Plugin temp;
+		if ((temp = this.core.getServer().getPluginManager()
+				.getPlugin("BOSEconomy")) != null) {
 			this.boseconomy = (BOSEconomy) temp;
+		} else {
+			if ((temp = this.core.getServer().getPluginManager()
+					.getPlugin("CraftConomy3")) != null) {
+				this.craftconomy = (Craftconomy2) temp;
+			}
 		}
 	}
+
 }

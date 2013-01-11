@@ -33,24 +33,68 @@
 
 package com.hotmail.joatin37.jcore;
 
+/**
+ * Used by the WorldMapCahce in order to represent a Chunk.
+ * 
+ * @author Joatin
+ * @since 1.0.0
+ * 
+ */
 public class ChunkPos {
 
+	/**
+	 * This ChunkPos X value.
+	 */
 	private final int x;
+
+	/**
+	 * This ChunkPos Z value.
+	 */
 	private final int z;
 
+	/**
+	 * Returns a new ChunkPos
+	 * 
+	 * @param x
+	 *            The X coordinate
+	 * @param z
+	 *            The Z coordinate
+	 * @return A new ChunkPos
+	 * @since 1.0.0
+	 */
 	public static ChunkPos Wrap(int x, int z) {
 		return new ChunkPos(x, z);
 	}
 
+	/**
+	 * Constructs a new ChunkPos
+	 * 
+	 * @param x
+	 *            The X coordinate
+	 * @param z
+	 *            The Z coordinate
+	 */
 	private ChunkPos(int x, int z) {
 		this.x = x;
 		this.z = z;
 	}
 
+	/**
+	 * Returns the X coordinate of this ChunkPos.
+	 * 
+	 * @return The X coordinate as an int.
+	 * @since 1.0.0
+	 */
 	public int getX() {
 		return this.x;
 	}
 
+	/**
+	 * Returns the Z coordinate of this ChunkPos.
+	 * 
+	 * @return The Z coordinate as an int.
+	 * @since 1.0.0
+	 */
 	public int getZ() {
 		return this.z;
 	}

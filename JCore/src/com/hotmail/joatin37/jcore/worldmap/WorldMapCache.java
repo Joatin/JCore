@@ -97,6 +97,16 @@ public class WorldMapCache extends LinkedHashMap<ChunkPos, JChunk> {
 		this.dirtychunks = new HashMap<ChunkPos, JChunk>();
 	}
 
+	/**
+	 * Returns the world this worldmapcache is bound to.
+	 * 
+	 * @return The name of the world.
+	 * @since 1.0.0
+	 */
+	public String getWorld() {
+		return this.world;
+	}
+
 	protected void putJ(ChunkPos key, JChunk value) {
 		this.put(key, value);
 		this.dirtychunks.put(key, value);

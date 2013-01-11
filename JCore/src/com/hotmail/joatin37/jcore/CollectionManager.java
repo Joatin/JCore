@@ -331,7 +331,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockBreakEvent(event, row);
+			try {
+				coll.BlockBreakEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -346,7 +352,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockBurnEvent(event, row);
+			try {
+				coll.BlockBurnEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -361,7 +373,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockCanBuildEvent(event, row);
+			try {
+				coll.BlockCanBuildEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -376,7 +394,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockDamageEvent(event, row);
+			try {
+				coll.BlockDamageEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -391,7 +415,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockDispenseEvent(event, row);
+			try {
+				coll.BlockDispenseEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -406,7 +436,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockExpEvent(event, row);
+			try {
+				coll.BlockExpEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -421,7 +457,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockFadeEvent(event, row);
+			try {
+				coll.BlockFadeEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -436,7 +478,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockFormEvent(event, row);
+			try {
+				coll.BlockFormEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -451,7 +499,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockFromToEvent(event, row);
+			try {
+				coll.BlockFromToEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -466,7 +520,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockGrowEvent(event, row);
+			try {
+				coll.BlockGrowEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -481,7 +541,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockIgniteEvent(event, row);
+			try {
+				coll.BlockIgniteEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -495,7 +561,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockPhysicsEvent(event, row);
+			try {
+				coll.BlockPhysicsEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -510,7 +582,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockPistonExtendEvent(event, row);
+			try {
+				coll.BlockPistonExtendEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -525,7 +603,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockPistonRetractEvent(event, row);
+			try {
+				coll.BlockPistonRetractEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -540,7 +624,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockPlaceEvent(event, row);
+			try {
+				coll.BlockPlaceEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -555,7 +645,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockRedstoneEvent(event, row);
+			try {
+				coll.BlockRedstoneEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -570,7 +666,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.BlockSpreadEvent(event, row);
+			try {
+				coll.BlockSpreadEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -585,7 +687,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.EntityBlockFormEvent(event, row);
+			try {
+				coll.EntityBlockFormEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -600,7 +708,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.LeavesDecayEvent(event, row);
+			try {
+				coll.LeavesDecayEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -615,7 +729,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.NotePlayEvent(event, row);
+			try {
+				coll.NotePlayEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -630,7 +750,13 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (coll == null) {
 			this.worldmap.set(null, null, null);
 		} else {
-			coll.SignChangeEvent(event, row);
+			try {
+				coll.SignChangeEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
 		}
 	}
 
@@ -638,12 +764,44 @@ public final class CollectionManager implements Listener, ICollectionManager {
 
 	@EventHandler
 	public void onEnchantItemEvent(EnchantItemEvent event) {
-
+		BlockRow1 row = this.worldmap
+				.get(event.getEnchantBlock().getLocation());
+		if (row == null) {
+			return;
+		}
+		Collection coll = this.collections.get(row.getCollectionId());
+		if (coll == null) {
+			this.worldmap.set(null, null, null);
+		} else {
+			try {
+				coll.EnchantItemEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
+		}
 	}
 
 	@EventHandler
 	public void onPrepareItemEnchantEvent(PrepareItemEnchantEvent event) {
-
+		BlockRow1 row = this.worldmap
+				.get(event.getEnchantBlock().getLocation());
+		if (row == null) {
+			return;
+		}
+		Collection coll = this.collections.get(row.getCollectionId());
+		if (coll == null) {
+			this.worldmap.set(null, null, null);
+		} else {
+			try {
+				coll.PrepareItemEnchantEvent(event, row);
+			} catch (Exception e) {
+				this.core.getLogger().severe(
+						"Couldn't pass " + event.getEventName() + " to "
+								+ coll.getName());
+			}
+		}
 	}
 
 	// enitity listeners
@@ -1033,23 +1191,53 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		if (row1.getCollectionId() != null && row2.getCollectionId() != null) {
 			if (row1.getCollectionId().equals(row2.getCollectionId())) {
 				Collection coll = this.collections.get(row1.getCollectionId());
-				coll.PlayerMoveEvent(event, row1);
+				try {
+					coll.PlayerMoveEvent(event, row1);
+				} catch (Exception e) {
+					this.core.getLogger().severe(
+							"Couldn't pass " + event.getEventName() + " to "
+									+ coll.getName());
+				}
 			} else {
 				Collection coll = this.collections.get(row1.getCollectionId());
-				coll.PlayerMoveEvent(event, row1);
+				try {
+					coll.PlayerMoveEvent(event, row1);
+				} catch (Exception e) {
+					this.core.getLogger().severe(
+							"Couldn't pass " + event.getEventName() + " to "
+									+ coll.getName());
+				}
 
 				Collection coll2 = this.collections.get(row2.getCollectionId());
-				coll2.PlayerMoveEvent(event, row2);
+				try {
+					coll2.PlayerMoveEvent(event, row2);
+				} catch (Exception e) {
+					this.core.getLogger().severe(
+							"Couldn't pass " + event.getEventName() + " to "
+									+ coll2.getName());
+				}
 			}
 		} else {
 			if (row1.getCollectionId() != null) {
 				Collection coll = this.collections.get(row1.getCollectionId());
-				coll.PlayerMoveEvent(event, row1);
+				try {
+					coll.PlayerMoveEvent(event, row1);
+				} catch (Exception e) {
+					this.core.getLogger().severe(
+							"Couldn't pass " + event.getEventName() + " to "
+									+ coll.getName());
+				}
 			} else {
 				if (row2.getCollectionId() != null) {
 					Collection coll2 = this.collections.get(row2
 							.getCollectionId());
-					coll2.PlayerMoveEvent(event, row2);
+					try {
+						coll2.PlayerMoveEvent(event, row2);
+					} catch (Exception e) {
+						this.core.getLogger().severe(
+								"Couldn't pass " + event.getEventName()
+										+ " to " + coll2.getName());
+					}
 				}
 			}
 		}

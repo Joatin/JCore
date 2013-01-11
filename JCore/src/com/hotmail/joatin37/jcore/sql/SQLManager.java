@@ -31,9 +31,46 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore.api;
+package com.hotmail.joatin37.jcore.sql;
 
-public abstract class WebPage {
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
 
-	public abstract String getName();
+import com.hotmail.joatin37.jcore.Core;
+
+public class SQLManager {
+
+	private final Core core;
+	private Connection conn = null;
+
+	public SQLManager(Core core) {
+		this.core = core;
+		this.getConnection();
+	}
+
+	public Connection getConnection() {
+		if (this.conn == null) {
+
+			String url = this.core.getConfig().getString("sql.url",
+					"mysql://localhost:3306/");
+
+			Properties connectionProps = new Properties();
+			connectionProps.put("user",
+					this.core.getConfig().getString("sql.username", "root"));
+			connectionProps.put("password",
+					this.core.getConfig().getString("sql.password", ""));
+			try {
+				this.conn = DriverManager.getConnection("jdbc:" + url,
+						connectionProps);
+				this.core.getLogger().info("Connected to database");
+			} catch (SQLException e) {
+				this.core.getLogger().info("Couldnt make the connection");
+
+			}
+		}
+		return this.conn;
+	}
+
 }
