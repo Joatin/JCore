@@ -1,4 +1,15 @@
+firststart: True
+sql:
+  enable: false
+  username: root
+  password:
+  url: mysql://localhost:3306/
+cachesize: 1000
 website:
-  enabled: true
+  enabled: false
   port: 443
 safemode: true
+lang:
+  custom: false
+  language: en-US
+  playerindividuallang: true
