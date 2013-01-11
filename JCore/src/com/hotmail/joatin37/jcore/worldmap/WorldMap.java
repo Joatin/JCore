@@ -41,34 +41,35 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.hotmail.joatin37.jcore.Core;
 import com.hotmail.joatin37.jcore.api.Collection;
 import com.hotmail.joatin37.jcore.api.ICollectionManager;
 import com.hotmail.joatin37.jcore.api.IWorldMap;
 import com.hotmail.joatin37.jcore.api.Plot;
 
-
 public class WorldMap implements IWorldMap {
 
 	private HashMap<String, WorldMapCache> caches;
-	private final JavaPlugin jtown;
+	private final JavaPlugin plugin;
 	private final ICollectionManager manager;
 
-	public WorldMap(JavaPlugin jtown, ICollectionManager manager) {
+	public WorldMap(JavaPlugin plugin, ICollectionManager manager) {
 		this.manager = manager;
-		this.jtown = jtown;
+		this.plugin = plugin;
 		this.caches = new HashMap<String, WorldMapCache>(3, (float) 0.75);
-		Iterator<World> iterator = jtown.getServer().getWorlds().iterator();
-		jtown.getLogger().info("Starting to load worlds");
+		Iterator<World> iterator = plugin.getServer().getWorlds().iterator();
+		plugin.getLogger().info("Starting to load worlds");
 		while (iterator.hasNext()) {
 			String w = iterator.next().getName();
-			jtown.getLogger().info("Loading world: " + w);
+			Core.sendDebug("Loading world: " + w);
 			this.caches.put(
 					w,
-					new WorldMapCache(this.jtown.getConfig().getInt(
-							"chachesize", 1000), new File(this.jtown
-							.getDataFolder(), w + ".sav"), this.jtown, w,
+					new WorldMapCache(this.plugin.getConfig().getInt(
+							"chachesize", 1000), new File(this.plugin
+							.getDataFolder(), w + ".sav"), this.plugin, w,
 							manager));
 		}
+		plugin.getLogger().info("Done loading worlds");
 	}
 
 	public void save() {
@@ -101,7 +102,7 @@ public class WorldMap implements IWorldMap {
 		}
 		WorldMapCache cache = this.caches.get(loc.getWorld().getName());
 		if (cache == null) {
-			this.jtown.getLogger().info("Cache fault");
+			this.plugin.getLogger().info("Cache fault");
 		}
 		if (cache.get(loc) == null) {
 			return true;

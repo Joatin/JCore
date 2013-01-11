@@ -139,6 +139,7 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 			this.webSite = new WebSite(this);
 		}
 		this.metrics = new GraphCollector(this);
+		Core.sendDebug(Lang.getConsoleMessageSentence(this, "AA"));
 	}
 
 	@Override

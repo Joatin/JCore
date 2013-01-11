@@ -1,7 +1,9 @@
 package com.hotmail.joatin37.jcore;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import net.minecraft.server.v1_4_6.Block;
@@ -9,15 +11,19 @@ import net.minecraft.server.v1_4_6.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.ChatPaginator;
 
 public final class Lang {
 
 	private static HashMap<String, HashMap<String, HashMap<String, String>>> langfiles = new HashMap<String, HashMap<String, HashMap<String, String>>>();
-	private static HashMap<String, JavaPlugin> plugins;
+	private static HashMap<String, JavaPlugin> plugins = new HashMap<String, JavaPlugin>();
 	private static String deflang = "en-US";
 	private static boolean isCustom = false;
 	private static Core core;
 	public static final String DEFAULTLANGAUGE = "en-US";
+	public static final String FILEENDING = ".lang";
+	public static final String[] suportedlangs = new String[] { "en-US",
+			"sv-SE" };
 
 	protected void setCustom(boolean bool) {
 
@@ -47,13 +53,51 @@ public final class Lang {
 		if (plugin == null) {
 			throw new NullPointerException("No JavaPlugin");
 		}
+		Core.sendDebug("Started loading: " + plugin.getName());
 		plugins.put(plugin.getName(), plugin);
-		InputStream input = plugin
-				.getResource("lang" + File.separator + "enUS");
-		if (input != null) {
-			Core.sendDebug("Found the en-US file");
-		} else {
-			Core.sendDebug("Couldnt create the en-US file");
+		langfiles.put(plugin.getName(),
+				new HashMap<String, HashMap<String, String>>());
+		for (int i = 0; i < suportedlangs.length; i++) {
+			InputStream input = plugin.getResource("lang/" + suportedlangs[i]
+					+ FILEENDING);
+			if (input != null) {
+				Core.sendDebug("Found the " + suportedlangs[i] + ".lang file");
+			} else {
+				if (suportedlangs[i].equals(DEFAULTLANGAUGE)) {
+					Core.sendDebug("Couldn't find the en-US file! You must make one else you plugin wont work!");
+				}
+				continue;
+			}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					input));
+			langfiles.get(plugin.getName()).put(suportedlangs[i],
+					new HashMap<String, String>());
+			String s;
+			try {
+				while ((s = reader.readLine()) != null) {
+					if (!s.startsWith("#")) {
+						String[] splits = s.split(":", 2);
+						if (splits.length == 2) {
+							langfiles
+									.get(plugin.getName())
+									.get(suportedlangs[i])
+									.put(splits[0].toUpperCase().trim(),
+											splits[1]);
+						}
+
+					}
+				}
+			} catch (IOException e) {
+				core.getLogger().severe(
+						"ERROR: an error occured while reading the "
+								+ suportedlangs[i]
+								+ ".lang file, belonging to "
+								+ plugin.getName());
+			}
+			try {
+				reader.close();
+			} catch (IOException e) {
+			}
 		}
 
 		// TODO
@@ -117,10 +161,10 @@ public final class Lang {
 		}
 		String tag1 = lang.get(tag);
 		if (tag1 == null) {
-
+			core.getLogger().info("error");
 		}
 
-		return null;
+		return ChatPaginator.wordWrap(tag1, 100);
 
 	}
 
@@ -204,44 +248,83 @@ public final class Lang {
 		// TODO
 	}
 
-	public static String[] getConsoleMessageSentence(JavaPlugin plugin,
+	public static String getConsoleMessageSentence(JavaPlugin plugin,
 			String tag, Entity entity, Player player, Block block) {
-		return MessageSentence(plugin, tag, entity, player, block);
+		String[] array = MessageSentence(plugin, tag, entity, player, block);
+		String s = "";
+		for (int i = 0; i < array.length; i++) {
+			s = s + array[i];
+		}
+		return s;
 	}
 
-	public static String[] getConsoleMessageSentence(JavaPlugin plugin,
+	public static String getConsoleMessageSentence(JavaPlugin plugin,
 			String tag, Entity entity, Block block) {
-		return MessageSentence(plugin, tag, entity, null, block);
+		String[] array = MessageSentence(plugin, tag, entity, null, block);
+		String s = "";
+		for (int i = 0; i < array.length; i++) {
+			s = s + array[i];
+		}
+		return s;
 	}
 
-	public static String[] getConsoleMessageSentence(JavaPlugin plugin,
+	public static String getConsoleMessageSentence(JavaPlugin plugin,
 			String tag, Player player, Block block) {
-		return MessageSentence(plugin, tag, null, player, block);
+		String[] array = MessageSentence(plugin, tag, null, player, block);
+		String s = "";
+		for (int i = 0; i < array.length; i++) {
+			s = s + array[i];
+		}
+		return s;
 	}
 
-	public static String[] getConsoleMessageSentence(JavaPlugin plugin,
+	public static String getConsoleMessageSentence(JavaPlugin plugin,
 			String tag, Block block) {
-		return MessageSentence(plugin, tag, null, null, block);
+		String[] array = MessageSentence(plugin, tag, null, null, block);
+		String s = "";
+		for (int i = 0; i < array.length; i++) {
+			s = s + array[i];
+		}
+		return s;
 	}
 
-	public static String[] getConsoleMessageSentence(JavaPlugin plugin,
+	public static String getConsoleMessageSentence(JavaPlugin plugin,
 			String tag, Entity entity, Player player) {
-		return MessageSentence(plugin, tag, entity, player, null);
+		String[] array = MessageSentence(plugin, tag, entity, player, null);
+		String s = "";
+		for (int i = 0; i < array.length; i++) {
+			s = s + array[i];
+		}
+		return s;
 	}
 
-	public static String[] getConsoleMessageSentence(JavaPlugin plugin,
+	public static String getConsoleMessageSentence(JavaPlugin plugin,
 			String tag, Entity entity) {
-		return MessageSentence(plugin, tag, entity, null, null);
+		String[] array = MessageSentence(plugin, tag, entity, null, null);
+		String s = "";
+		for (int i = 0; i < array.length; i++) {
+			s = s + array[i];
+		}
+		return s;
 	}
 
-	public static String[] getConsoleMessageSentence(JavaPlugin plugin,
+	public static String getConsoleMessageSentence(JavaPlugin plugin,
 			String tag, Player player) {
-		return MessageSentence(plugin, tag, null, player, null);
+		String[] array = MessageSentence(plugin, tag, null, player, null);
+		String s = "";
+		for (int i = 0; i < array.length; i++) {
+			s = s + array[i];
+		}
+		return s;
 	}
 
-	public static String[] getConsoleMessageSentence(JavaPlugin plugin,
-			String tag) {
-		return MessageSentence(plugin, tag, null, null, null);
+	public static String getConsoleMessageSentence(JavaPlugin plugin, String tag) {
+		String[] array = MessageSentence(plugin, tag, null, null, null);
+		String s = "";
+		for (int i = 0; i < array.length; i++) {
+			s = s + array[i];
+		}
+		return s;
 	}
 
 	public static String[] sendConsoleInfoMessage(JavaPlugin plugin,

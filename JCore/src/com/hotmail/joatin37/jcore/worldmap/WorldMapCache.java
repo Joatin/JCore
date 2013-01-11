@@ -198,10 +198,7 @@ public class WorldMapCache extends LinkedHashMap<ChunkPos, JChunk> {
 				Iterator<JChunk> dirty = this.dirtychunks.values().iterator();
 				while (dirty.hasNext()) {
 					byte[] w = dirty.next().getBytes();
-					if (Core.isDebugg()) {
-						this.core.getLogger().info(
-								"Writing bytes of lenght" + w.length);
-					}
+					Core.sendDebug("Writing bytes of lenght" + w.length);
 					output.writeInt(w.length);
 					output.write(w);
 				}
@@ -228,9 +225,7 @@ public class WorldMapCache extends LinkedHashMap<ChunkPos, JChunk> {
 		try {
 			input = new DataInputStream(new FileInputStream(this.savefile));
 			int i1 = input.readInt(); // reads the version number;
-			if (Core.isDebugg()) {
-				this.core.getLogger().info("" + i1);
-			}
+			Core.sendDebug("Protocol: " + i1);
 			vec = new Vector<ChunkPos>(100, 20);
 			try {
 				while (true) {
