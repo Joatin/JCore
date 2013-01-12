@@ -46,7 +46,8 @@ import com.hotmail.joatin37.jcore.core.ICore;
  * class brings all functions of the JavaPlugin class, and some additional
  * functions to make the interaction with JTown easier.
  * 
- * @see JavaPlugin, ICore
+ * @see JavaPlugin
+ * @see ICore
  * 
  * @author Joatin
  * 

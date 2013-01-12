@@ -217,15 +217,15 @@ public abstract class Collection {
 	/**
 	 * The constructor used for restoring a Collection.
 	 * 
-	 * @param manager
-	 *            The ICollectionManager that manages this collection
+	 * @param extension
+	 *            The ExtesnionHandler that manages this collection
 	 * @param uuid
 	 *            The uuid for this collection.
-	 * @param extension
-	 *            The plugin that constructs this plugin
 	 * @param loadfile
 	 *            The Yaml file used to restore data for this collection
 	 * @since 1.0.0
+	 * @see FileConfiguration
+	 * @see UUID
 	 */
 	public Collection(UUID uuid, ExtensionHandler extension,
 			FileConfiguration loadfile) {
