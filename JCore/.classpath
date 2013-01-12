@@ -17,5 +17,6 @@
 	<classpathentry kind="lib" path="libs/MineConomy.jar"/>
 	<classpathentry kind="lib" path="libs/MultiCurrency-2.2.jar"/>
 	<classpathentry kind="lib" path="libs/Vault.jar"/>
+	<classpathentry kind="lib" path="libs/CurrencyCore.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
