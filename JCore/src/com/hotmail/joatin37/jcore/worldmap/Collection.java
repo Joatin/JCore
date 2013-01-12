@@ -31,7 +31,7 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore.api;
+package com.hotmail.joatin37.jcore.worldmap;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -169,8 +169,7 @@ import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 
-import com.hotmail.joatin37.jcore.JUtil;
-import com.hotmail.joatin37.jcore.worldmap.BlockRow1;
+import com.hotmail.joatin37.jcore.util.JUtil;
 
 public abstract class Collection {
 

@@ -40,8 +40,7 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 
-import com.hotmail.joatin37.jcore.Core;
-import com.hotmail.joatin37.jcore.api.ICollectionManager;
+import com.hotmail.joatin37.jcore.core.Core;
 
 public class JChunk extends HashMap<BlockPos, BlockRow1> {
 

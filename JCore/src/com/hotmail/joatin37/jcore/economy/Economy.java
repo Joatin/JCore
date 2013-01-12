@@ -31,7 +31,9 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore;
+package com.hotmail.joatin37.jcore.economy;
+
+import is.currency.Currency;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -45,6 +47,7 @@ public final class Economy {
 	private BOSEconomy boseconomy;
 	private Craftconomy2 craftconomy;
 	private net.milkbowl.vault.economy.Economy vaulteconomy;
+	private Currency currency;
 
 	private JavaPlugin core;
 
@@ -53,16 +56,31 @@ public final class Economy {
 	}
 
 	public void init() {
-		Plugin temp;
-		if ((temp = this.core.getServer().getPluginManager()
-				.getPlugin("BOSEconomy")) != null) {
-			this.boseconomy = (BOSEconomy) temp;
+
+	}
+
+	public void loadBOSEconomy() {
+		// Attempt to get the plugin instance for BOSEconomy.
+		Plugin temp = this.core.getServer().getPluginManager()
+				.getPlugin("BOSEconomy");
+
+		// Check whether BOSEconomy is loaded.
+		if (temp == null) {
+			// BOSEconomy is not loaded on the server.
+			this.boseconomy = null;
 		} else {
-			if ((temp = this.core.getServer().getPluginManager()
-					.getPlugin("CraftConomy3")) != null) {
-				this.craftconomy = (Craftconomy2) temp;
-			}
+			// BOSEconomy is now stored in the "economy" variable.
+			this.boseconomy = (BOSEconomy) temp;
 		}
+	}
+
+	public void loadCurrency() {
+		Plugin currencyCore = this.core.getServer().getPluginManager()
+				.getPlugin("CurrencyCore");
+		if (currencyCore != null) {
+			this.currency = (Currency) currencyCore;
+		}
+
 	}
 
 }

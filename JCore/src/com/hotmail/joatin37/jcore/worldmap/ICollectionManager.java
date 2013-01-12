@@ -31,11 +31,12 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore.api;
+package com.hotmail.joatin37.jcore.worldmap;
 
 import java.util.UUID;
 
 import org.bukkit.Location;
+
 
 /**
  * The interface for the collectionmanager. It provides all usefull methods.

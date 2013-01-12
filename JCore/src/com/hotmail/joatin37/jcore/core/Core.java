@@ -31,7 +31,7 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore;
+package com.hotmail.joatin37.jcore.core;
 
 import java.io.File;
 import java.util.Collections;
@@ -42,13 +42,14 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.hotmail.joatin37.jcore.api.ExtensionHandler;
-import com.hotmail.joatin37.jcore.api.ICollectionManager;
-import com.hotmail.joatin37.jcore.api.ICore;
-import com.hotmail.joatin37.jcore.api.WebPage;
+import com.hotmail.joatin37.jcore.language.Lang;
 import com.hotmail.joatin37.jcore.sql.SQLManager;
 import com.hotmail.joatin37.jcore.util.GraphCollector;
+import com.hotmail.joatin37.jcore.website.WebPage;
 import com.hotmail.joatin37.jcore.website.WebSite;
+import com.hotmail.joatin37.jcore.worldmap.CollectionManager;
+import com.hotmail.joatin37.jcore.worldmap.ExtensionHandler;
+import com.hotmail.joatin37.jcore.worldmap.ICollectionManager;
 
 public final class Core extends JavaPlugin implements ICore, Listener {
 

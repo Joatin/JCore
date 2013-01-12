@@ -31,7 +31,7 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore;
+package com.hotmail.joatin37.jcore.worldmap;
 
 import java.io.File;
 import java.io.IOException;
@@ -167,12 +167,8 @@ import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.hotmail.joatin37.jcore.api.Collection;
-import com.hotmail.joatin37.jcore.api.ICollectionManager;
-import com.hotmail.joatin37.jcore.api.IWorldMap;
-import com.hotmail.joatin37.jcore.api.Plot;
-import com.hotmail.joatin37.jcore.worldmap.BlockRow1;
-import com.hotmail.joatin37.jcore.worldmap.WorldMap;
+import com.hotmail.joatin37.jcore.core.Core;
+import com.hotmail.joatin37.jcore.util.JUtil;
 
 public final class CollectionManager implements Listener, ICollectionManager {
 
@@ -218,7 +214,7 @@ public final class CollectionManager implements Listener, ICollectionManager {
 		return null;
 	}
 
-	protected void onInit() {
+	public void onInit() {
 		this.load();
 		this.worldmap = new WorldMap(this.jtown, this);
 		this.jtown.getServer().getPluginManager()

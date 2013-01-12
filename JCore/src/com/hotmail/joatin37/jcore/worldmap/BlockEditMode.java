@@ -31,7 +31,7 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore.api;
+package com.hotmail.joatin37.jcore.worldmap;
 
 import java.util.Iterator;
 import java.util.List;
@@ -41,6 +41,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+
 
 public final class BlockEditMode implements Runnable {
 	private boolean pinswitch = true;

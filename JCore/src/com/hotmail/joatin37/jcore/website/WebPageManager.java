@@ -39,7 +39,7 @@ import java.net.Socket;
 import java.util.List;
 import java.util.Vector;
 
-import com.hotmail.joatin37.jcore.Core;
+import com.hotmail.joatin37.jcore.core.Core;
 
 public class WebPageManager implements Runnable {
 

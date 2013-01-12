@@ -28,13 +28,13 @@
 #The views and conclusions contained in the software and documentation are those of the
 #authors and contributors and should not be interpreted as representing official policies,
 #either expressed or implied, of anybody else.
-#
-#
-#
-#
-#
+
+
+
+
+
 #This is the english lang file. 
-#All the lines that starts with a # is a commant line,
+#All the lines that starts with a # is a comment line,
 #those lines are ignored.
 #Use this lang file as a reference when translate all to all the other languages.
 #A sentence line starts with the tag which shall always be a two uppercase letter combination. AA-ZZ,
@@ -44,5 +44,9 @@
 #This lang file is used to send messages to both players and the console.
 
 
-#Just a sentence used for deug
-AA: §4Language Works!
+#Just a sentence used for debug
+AA: §eLanguage Works!
+
+#The error if a language tag is missing within a plugin.
+#This is a special case where [plugin] and [tag] will  be replaced with apropriete content
+AB: §4The language tag, [tag] inside [plugin] wasn't found!

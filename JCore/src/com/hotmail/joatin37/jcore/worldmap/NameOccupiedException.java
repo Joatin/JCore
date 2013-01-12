@@ -31,7 +31,7 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore.api;
+package com.hotmail.joatin37.jcore.worldmap;
 
 public class NameOccupiedException extends Exception {
 

@@ -31,9 +31,12 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore.api;
+package com.hotmail.joatin37.jcore.core;
 
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.hotmail.joatin37.jcore.worldmap.ExtensionHandler;
+import com.hotmail.joatin37.jcore.worldmap.ICollectionManager;
 
 public interface ICore {
 

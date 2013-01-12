@@ -41,11 +41,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.hotmail.joatin37.jcore.Core;
-import com.hotmail.joatin37.jcore.api.Collection;
-import com.hotmail.joatin37.jcore.api.ICollectionManager;
-import com.hotmail.joatin37.jcore.api.IWorldMap;
-import com.hotmail.joatin37.jcore.api.Plot;
+import com.hotmail.joatin37.jcore.core.Core;
 
 public class WorldMap implements IWorldMap {
 

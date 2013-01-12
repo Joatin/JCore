@@ -38,7 +38,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import com.hotmail.joatin37.jcore.Core;
+import com.hotmail.joatin37.jcore.core.Core;
 
 public class SQLManager {
 

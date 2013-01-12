@@ -31,13 +31,15 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore.api;
+package com.hotmail.joatin37.jcore.worldmap;
 
 import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.hotmail.joatin37.jcore.core.ICore;
 
 /**
  * Your plugin should extend this class instead of the JavaPlugin class. This

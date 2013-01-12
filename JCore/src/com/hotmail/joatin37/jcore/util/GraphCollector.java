@@ -36,7 +36,7 @@ package com.hotmail.joatin37.jcore.util;
 import java.io.IOException;
 import java.util.Iterator;
 
-import com.hotmail.joatin37.jcore.Core;
+import com.hotmail.joatin37.jcore.core.Core;
 import com.hotmail.joatin37.jcore.util.BukkitMetrics.Graph;
 
 public class GraphCollector {

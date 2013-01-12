@@ -40,7 +40,7 @@ import java.net.Socket;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.hotmail.joatin37.jcore.Core;
+import com.hotmail.joatin37.jcore.core.Core;
 
 public class WebSite implements Runnable {
 

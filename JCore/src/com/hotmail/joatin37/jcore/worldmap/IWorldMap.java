@@ -31,9 +31,10 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore.api;
+package com.hotmail.joatin37.jcore.worldmap;
 
 import org.bukkit.Location;
+
 
 public interface IWorldMap {
 

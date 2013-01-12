@@ -1,4 +1,4 @@
-package com.hotmail.joatin37.jcore;
+package com.hotmail.joatin37.jcore.language;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +12,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.ChatPaginator;
+
+import com.hotmail.joatin37.jcore.core.Core;
 
 public final class Lang {
 
@@ -29,7 +31,7 @@ public final class Lang {
 
 	}
 
-	protected void setup(Core core, String tag, boolean iscustom) {
+	public void setup(Core core, String tag, boolean iscustom) {
 		if (tag == null) {
 			throw new NullPointerException(
 					"The tag containing the language to use was null");
@@ -109,18 +111,34 @@ public final class Lang {
 
 	}
 
-	private String parseBlock(Block block) {
+	private static String parseBlock(Block block) {
 		if (block == null) {
 			return "block";
 		}
 		return null;
 	}
 
-	private String parseBlock(Entity entity) {
+	private static String parseEntity(Entity entity) {
 		if (entity == null) {
 			return "entity";
 		}
 		return null;
+	}
+
+	private static String parsePlugin(JavaPlugin plugin) {
+		if (plugin == null) {
+			return "plugin";
+		} else {
+			return plugin.getName();
+		}
+	}
+
+	private static String parsePlayer(Player player) {
+		if (player == null) {
+			return "player";
+		} else {
+			return player.getName();
+		}
 	}
 
 	private final static String[] MessageSentence(JavaPlugin plugin,
@@ -161,9 +179,21 @@ public final class Lang {
 		}
 		String tag1 = lang.get(tag);
 		if (tag1 == null) {
-			core.getLogger().info("error");
-		}
+			if (plugin.getName().equals("JCore")) {
+				core.getLogger().info("Language error");
+			} else {
+				core.getLogger().warning(
+						Lang.getConsoleMessageSentence(core, "AB")
+								.replace("[plugin]", plugin.getName())
+								.replace("[tag]", tag));
+			}
 
+		}
+		tag1 = tag1.replace("[tag]", tag)
+				.replace("[plugin]", Lang.parsePlugin(plugin))
+				.replace("[entity]", Lang.parseEntity(entity))
+				.replace("[player]", Lang.parsePlayer(player))
+				.replace("[block]", Lang.parseBlock(block));
 		return ChatPaginator.wordWrap(tag1, 100);
 
 	}
@@ -215,37 +245,38 @@ public final class Lang {
 
 	public static void sendPlayerMessage(JavaPlugin plugin, Player player,
 			String tag, Entity entity, Player repplayer, Block block) {
-		// TODO
+		player.sendMessage(MessageSentence(plugin, tag, entity, repplayer,
+				block));
 	}
 
 	public static void sendPlayerMessage(JavaPlugin plugin, Player player,
 			String tag) {
-		// TODO
+		player.sendMessage(MessageSentence(plugin, tag, null, null, null));
 	}
 
 	public static void sendPlayerMessage(JavaPlugin plugin, Player player,
 			String tag, Entity entity) {
-		// TODO
+		player.sendMessage(MessageSentence(plugin, tag, entity, null, null));
 	}
 
 	public static void sendPlayerMessage(JavaPlugin plugin, Player player,
 			String tag, Player repplayer) {
-		// TODO
+		player.sendMessage(MessageSentence(plugin, tag, null, repplayer, null));
 	}
 
 	public static void sendPlayerMessage(JavaPlugin plugin, Player player,
 			String tag, Block block) {
-		// TODO
+		player.sendMessage(MessageSentence(plugin, tag, null, null, block));
 	}
 
 	public static void sendPlayerMessage(JavaPlugin plugin, Player player,
 			String tag, Entity entity, Block block) {
-		// TODO
+		player.sendMessage(MessageSentence(plugin, tag, entity, null, block));
 	}
 
 	public static void sendPlayerMessage(JavaPlugin plugin, Player player,
 			String tag, Player repplayer, Block block) {
-		// TODO
+		player.sendMessage(MessageSentence(plugin, tag, null, repplayer, block));
 	}
 
 	public static String getConsoleMessageSentence(JavaPlugin plugin,

@@ -53,11 +53,7 @@ import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.io.Files;
-import com.hotmail.joatin37.jcore.ChunkPos;
-import com.hotmail.joatin37.jcore.Core;
-import com.hotmail.joatin37.jcore.api.Collection;
-import com.hotmail.joatin37.jcore.api.ICollectionManager;
-import com.hotmail.joatin37.jcore.api.Plot;
+import com.hotmail.joatin37.jcore.core.Core;
 
 public class WorldMapCache extends LinkedHashMap<ChunkPos, JChunk> {
 
