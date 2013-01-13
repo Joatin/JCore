@@ -18,5 +18,39 @@
 	<classpathentry kind="lib" path="libs/MultiCurrency-2.2.jar"/>
 	<classpathentry kind="lib" path="libs/Vault.jar"/>
 	<classpathentry kind="lib" path="libs/CurrencyCore.jar"/>
+	<classpathentry kind="lib" path="libs/MChat-1.3.2-R1.0.jar"/>
+	<classpathentry kind="lib" path="libs/3co.jar"/>
+	<classpathentry kind="lib" path="libs/AEco-2.1.jar"/>
+	<classpathentry kind="lib" path="libs/bpermissions.jar"/>
+	<classpathentry kind="lib" path="libs/bpermissions2.jar"/>
+	<classpathentry kind="lib" path="libs/CommandsEX.jar"/>
+	<classpathentry kind="lib" path="libs/craftbukkit-1.4.5-R0.3.jar"/>
+	<classpathentry kind="lib" path="libs/Craftconomy.jar"/>
+	<classpathentry kind="lib" path="libs/craftconomy3.jar"/>
+	<classpathentry kind="lib" path="libs/Dosh.jar"/>
+	<classpathentry kind="lib" path="libs/DroxPerms-0.4.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/Essentials.jar"/>
+	<classpathentry kind="lib" path="libs/EssentialsGroupManager.jar"/>
+	<classpathentry kind="lib" path="libs/GoldIsMoney.jar"/>
+	<classpathentry kind="lib" path="libs/GoldIsMoney2.jar"/>
+	<classpathentry kind="lib" path="libs/Gringotts.jar"/>
+	<classpathentry kind="lib" path="libs/iChat.jar"/>
+	<classpathentry kind="lib" path="libs/iConomy4.jar"/>
+	<classpathentry kind="lib" path="libs/iConomy5.jar"/>
+	<classpathentry kind="lib" path="libs/iConomy6.jar"/>
+	<classpathentry kind="lib" path="libs/maven-ant-tasks-2.1.3.jar"/>
+	<classpathentry kind="lib" path="libs/mChat.jar"/>
+	<classpathentry kind="lib" path="libs/mChatSuite.jar"/>
+	<classpathentry kind="lib" path="libs/McMoney.jar"/>
+	<classpathentry kind="lib" path="libs/MultiCurrency.jar"/>
+	<classpathentry kind="lib" path="libs/Permissions.jar"/>
+	<classpathentry kind="lib" path="libs/PermissionsBukkit.jar"/>
+	<classpathentry kind="lib" path="libs/PermissionsEx.jar"/>
+	<classpathentry kind="lib" path="libs/Privileges.jar"/>
+	<classpathentry kind="lib" path="libs/Register.jar"/>
+	<classpathentry kind="lib" path="libs/SimplyPerms.jar"/>
+	<classpathentry kind="lib" path="libs/Starburst.jar"/>
+	<classpathentry kind="lib" path="libs/XPBank.jar"/>
+	<classpathentry kind="lib" path="libs/zPermissions.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
