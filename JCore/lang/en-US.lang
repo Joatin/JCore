@@ -48,5 +48,7 @@
 AA: §eLanguage Works!
 
 #The error if a language tag is missing within a plugin.
-#This is a special case where [plugin] and [tag] will  be replaced with apropriete content
 AB: §4The language tag, [tag] inside [plugin] wasn't found!
+
+#If the connection to SQL database failed.
+AC: Couldn't create the SQL connection, perhaps you host name was wrong, or maybe you typed in a wrong username or password.

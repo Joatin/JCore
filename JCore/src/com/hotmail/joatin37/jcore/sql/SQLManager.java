@@ -45,12 +45,9 @@ public class SQLManager {
 	private final Core core;
 	private Connection conn = null;
 
-	public SQLManager(Core core) {
+	public SQLManager(Core core) throws SQLException {
 		this.core = core;
-		this.getConnection();
-	}
-
-	public Connection getConnection() {
+		;
 		if (this.conn == null) {
 
 			String url = this.core.getConfig().getString("sql.url",
@@ -61,16 +58,11 @@ public class SQLManager {
 					this.core.getConfig().getString("sql.username", "root"));
 			connectionProps.put("password",
 					this.core.getConfig().getString("sql.password", ""));
-			try {
-				this.conn = DriverManager.getConnection("jdbc:" + url,
-						connectionProps);
-				this.core.getLogger().info("Connected to database");
-			} catch (SQLException e) {
-				this.core.getLogger().info("Couldnt make the connection");
 
-			}
+			this.conn = DriverManager.getConnection("jdbc:" + url,
+					connectionProps);
+			this.core.getLogger().info("Connected to database");
 		}
-		return this.conn;
 	}
 
 }

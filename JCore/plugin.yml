@@ -1,6 +1,6 @@
 name: JCore
 version: 1.0.0
-main: com.hotmail.joatin37.jcore.Core
+main: com.hotmail.joatin37.jcore.core.Core
 author: Joatin
 load: POSTWORLD
 description: A landmanagement system for bukkit, plus some more extra.

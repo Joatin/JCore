@@ -33,54 +33,7 @@
 
 package com.hotmail.joatin37.jcore.economy;
 
-import is.currency.Currency;
-
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import com.greatmancode.craftconomy3.converter.converters.Craftconomy2;
-
-import cosine.boseconomy.BOSEconomy;
 
 public final class Economy {
-
-	private BOSEconomy boseconomy;
-	private Craftconomy2 craftconomy;
-	private net.milkbowl.vault.economy.Economy vaulteconomy;
-	private Currency currency;
-
-	private JavaPlugin core;
-
-	public Economy(JavaPlugin core) {
-		this.core = core;
-	}
-
-	public void init() {
-
-	}
-
-	public void loadBOSEconomy() {
-		// Attempt to get the plugin instance for BOSEconomy.
-		Plugin temp = this.core.getServer().getPluginManager()
-				.getPlugin("BOSEconomy");
-
-		// Check whether BOSEconomy is loaded.
-		if (temp == null) {
-			// BOSEconomy is not loaded on the server.
-			this.boseconomy = null;
-		} else {
-			// BOSEconomy is now stored in the "economy" variable.
-			this.boseconomy = (BOSEconomy) temp;
-		}
-	}
-
-	public void loadCurrency() {
-		Plugin currencyCore = this.core.getServer().getPluginManager()
-				.getPlugin("CurrencyCore");
-		if (currencyCore != null) {
-			this.currency = (Currency) currencyCore;
-		}
-
-	}
 
 }

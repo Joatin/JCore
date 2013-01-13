@@ -176,7 +176,7 @@ public abstract class Collection {
 	private final UUID uuid;
 	private String name;
 	private String owner;
-	private final ExtensionHandler extension;
+	private final LandHandler extension;
 	private final ICollectionManager manager;
 	private HashMap<UUID, Plot> plots;
 	private HashMap<Player, Plot> playersinside;
@@ -227,7 +227,7 @@ public abstract class Collection {
 	 * @see FileConfiguration
 	 * @see UUID
 	 */
-	public Collection(UUID uuid, ExtensionHandler extension,
+	public Collection(UUID uuid, LandHandler extension,
 			FileConfiguration loadfile) {
 		this.extension = extension;
 		this.uuid = uuid;
@@ -250,7 +250,7 @@ public abstract class Collection {
 		}
 	}
 
-	public Collection(UUID uuid, ExtensionHandler extension, String name,
+	public Collection(UUID uuid, LandHandler extension, String name,
 			String owner) throws NameOccupiedException {
 		if (owner == null) {
 			throw new NullPointerException();

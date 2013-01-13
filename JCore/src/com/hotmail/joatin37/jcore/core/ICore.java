@@ -35,12 +35,12 @@ package com.hotmail.joatin37.jcore.core;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.hotmail.joatin37.jcore.worldmap.ExtensionHandler;
+import com.hotmail.joatin37.jcore.worldmap.LandHandler;
 import com.hotmail.joatin37.jcore.worldmap.ICollectionManager;
 
 public interface ICore {
 
-	public void addExtension(ExtensionHandler extensionHandler, JavaPlugin plugin);
+	public void addExtension(LandHandler landHandler, JavaPlugin plugin);
 
 	public ICollectionManager getManager();
 }

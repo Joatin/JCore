@@ -55,10 +55,10 @@ public final class BlockEditMode implements Runnable {
 	private Collection coll;
 	private Player player;
 	private Plot plot;
-	private ExtensionHandler extension;
+	private LandHandler extension;
 	private BukkitTask task;
 
-	public BlockEditMode(ExtensionHandler extension, Player player,
+	public BlockEditMode(LandHandler extension, Player player,
 			Collection coll) {
 		this.coll = coll;
 		this.map = extension.getICollectionManager().getWorldMap();
@@ -77,7 +77,7 @@ public final class BlockEditMode implements Runnable {
 				.cancelTask(this.task.getTaskId());
 	}
 
-	public BlockEditMode(ExtensionHandler extension, Player player, Plot plot) {
+	public BlockEditMode(LandHandler extension, Player player, Plot plot) {
 		this.coll = plot.getParent();
 		this.plot = plot;
 		this.map = extension.getICollectionManager().getWorldMap();

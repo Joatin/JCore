@@ -34,6 +34,7 @@
 package com.hotmail.joatin37.jcore.core;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
@@ -48,12 +49,12 @@ import com.hotmail.joatin37.jcore.util.GraphCollector;
 import com.hotmail.joatin37.jcore.website.WebPage;
 import com.hotmail.joatin37.jcore.website.WebSite;
 import com.hotmail.joatin37.jcore.worldmap.CollectionManager;
-import com.hotmail.joatin37.jcore.worldmap.ExtensionHandler;
 import com.hotmail.joatin37.jcore.worldmap.ICollectionManager;
+import com.hotmail.joatin37.jcore.worldmap.LandHandler;
 
 public final class Core extends JavaPlugin implements ICore, Listener {
 
-	private final HashMap<String, ExtensionHandler> extensionHandlers;
+	private final HashMap<String, LandHandler> landHandlers;
 	private final HashMap<String, WebPage> webpages;
 	private final CollectionManager manager;
 	private FileConfiguration config = null;
@@ -64,16 +65,27 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 	private GraphCollector metrics;
 	private SQLManager sql;
 	private static Core core;
+	private Lang lang;
+	private boolean usingCustomLang;
+	private String defaultLanguage;
 
 	public Core() {
 		DEBUGG = true;
 		this.webpages = new HashMap<String, WebPage>();
-		this.extensionHandlers = new HashMap<String, ExtensionHandler>();
+		this.landHandlers = new HashMap<String, LandHandler>();
 		this.manager = new CollectionManager(this, this);
 	}
 
-	public ExtensionHandler getExtension(String plugin) {
-		ExtensionHandler ex = this.extensionHandlers.get(plugin);
+	public boolean isCustomLang() {
+		return this.usingCustomLang;
+	}
+
+	public String defLanguage() {
+		return this.defaultLanguage;
+	}
+
+	public LandHandler getExtension(String plugin) {
+		LandHandler ex = this.landHandlers.get(plugin);
 		if (ex == null && this.getConfig().getBoolean("safemode", true)) {
 			this.getLogger()
 					.severe(plugin
@@ -91,13 +103,12 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 	}
 
 	public Set<String> getExtensionNames() {
-		return Collections.unmodifiableSet(this.extensionHandlers.keySet());
+		return Collections.unmodifiableSet(this.landHandlers.keySet());
 	}
 
 	@Override
-	public void addExtension(ExtensionHandler extensionHandler,
-			JavaPlugin plugin) {
-		this.extensionHandlers.put(plugin.getName(), extensionHandler);
+	public void addExtension(LandHandler landHandler, JavaPlugin plugin) {
+		this.landHandlers.put(plugin.getName(), landHandler);
 		this.getLogger().info(
 				plugin.getDescription().getName() + " "
 						+ plugin.getDescription().getVersion()
@@ -111,18 +122,16 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 	@Override
 	public void onLoad() {
 		Core.core = this;
-		new Lang().setup(this,
-				this.getConfig().getString("lang.language", "en-US"), this
-						.getConfig().getBoolean("lang.custom", false));
+		this.lang = new Lang(this);
 		if (this.getConfig().getBoolean("sql.enable", false)) {
-			this.sql = new SQLManager(this);
-			if (Core.isDebugg()) {
-				this.getLogger().info("Created the sql instance");
+			try {
+				this.sql = new SQLManager(this);
+			} catch (SQLException e) {
+				Lang.sendConsoleWarningMessage(this, "AC");
 			}
+			Core.sendDebug("Created the sql instance");
 		} else {
-			if (Core.isDebugg()) {
-				this.getLogger().info("Didn't create the sql instance");
-			}
+			Core.sendDebug("Didn't create the sql instance");
 		}
 	}
 

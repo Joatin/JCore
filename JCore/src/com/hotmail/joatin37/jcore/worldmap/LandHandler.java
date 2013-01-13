@@ -54,14 +54,14 @@ import com.hotmail.joatin37.jcore.core.ICore;
  * @since 1.0.0
  * 
  */
-public abstract class ExtensionHandler {
+public abstract class LandHandler {
 
 	private final JavaPlugin plugin;
 	private final ICore core;
 	private final ICollectionManager manager;
 	private final IWorldMap map;
 
-	public ExtensionHandler(JavaPlugin plugin) {
+	public LandHandler(JavaPlugin plugin) {
 		this.plugin = plugin;
 		this.core = (ICore) plugin.getServer().getPluginManager()
 				.getPlugin("JCore");

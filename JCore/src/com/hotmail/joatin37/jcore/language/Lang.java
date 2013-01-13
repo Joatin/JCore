@@ -66,30 +66,22 @@ public final class Lang {
 			"sv-SE" };
 
 	/**
-	 * Empty, does nothing.
+	 * Used to set JCore reference inside your class. If you use this it wont
+	 * have any effect.
 	 * 
+	 * @throws NullPointerException
+	 *             if the JCore passed was null
 	 * @since 1.0.0
 	 */
-	public Lang() {
-
-	}
-
-	/**
-	 * -----!!!THIS SHOULD NOT BE USED!!!-----
-	 * 
-	 * @since 1.0.0
-	 */
-	public void setup(Core core, String tag, boolean iscustom) {
-		if (tag == null) {
-			throw new NullPointerException(
-					"The tag containing the language to use was null");
-		}
+	public Lang(Core core) {
 		if (core == null) {
-			throw new NullPointerException("Core was null");
+			throw new NullPointerException();
 		}
-		Lang.core = core;
-		Lang.isCustom = iscustom;
-		Lang.deflang = tag;
+		if (Lang.core != null) {
+			Lang.core = core;
+			Lang.deflang = core.defLanguage();
+			Lang.isCustom = core.isCustomLang();
+		}
 	}
 
 	/**
