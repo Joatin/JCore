@@ -16,7 +16,6 @@
 	<classpathentry kind="lib" path="libs/iConomy.jar"/>
 	<classpathentry kind="lib" path="libs/MineConomy.jar"/>
 	<classpathentry kind="lib" path="libs/MultiCurrency-2.2.jar"/>
-	<classpathentry kind="lib" path="libs/Vault.jar"/>
 	<classpathentry kind="lib" path="libs/CurrencyCore.jar"/>
 	<classpathentry kind="lib" path="libs/MChat-1.3.2-R1.0.jar"/>
 	<classpathentry kind="lib" path="libs/3co.jar"/>

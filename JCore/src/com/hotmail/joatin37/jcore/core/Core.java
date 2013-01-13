@@ -43,6 +43,30 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.hotmail.joatin37.jcore.economy.IEconomy;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_3co;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_AEco;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_BOSE6;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_BOSE7;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_CommandsEX;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_Craftconomy;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_Craftconomy3;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_CurrencyCore;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_Dosh;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_EconXP;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_Essentials;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_GoldIsMoney;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_GoldIsMoney2;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_Gringotts;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_McMoney;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_MineConomy;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_MultiCurrency;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_SDFEconomy;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_XPBank;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_eWallet;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_iConomy4;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_iConomy5;
+import com.hotmail.joatin37.jcore.economy.plugins.Economy_iConomy6;
 import com.hotmail.joatin37.jcore.language.Lang;
 import com.hotmail.joatin37.jcore.sql.SQLManager;
 import com.hotmail.joatin37.jcore.util.GraphCollector;
@@ -68,6 +92,7 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 	private Lang lang;
 	private boolean usingCustomLang;
 	private String defaultLanguage;
+	private IEconomy econ;
 
 	public Core() {
 		DEBUGG = true;
@@ -78,6 +103,10 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 
 	public boolean isCustomLang() {
 		return this.usingCustomLang;
+	}
+
+	public IEconomy getIEconomy() {
+		return this.econ;
 	}
 
 	public String defLanguage() {
@@ -150,6 +179,7 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 		}
 		this.metrics = new GraphCollector(this);
 		Core.sendDebug(Lang.getConsoleMessageSentence(this, "AA"));
+		this.loadEconomy();
 	}
 
 	@Override
@@ -168,4 +198,110 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 		if (this.webSite != null) {
 		}
 	}
+
+	private static boolean existsPlugin(String... packages) {
+		try {
+			for (String pkg : packages) {
+				Class.forName(pkg);
+			}
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	private void hookEconomy(String name, Class<? extends IEconomy> hookClass,
+			String... packages) {
+		try {
+			if (existsPlugin(packages)) {
+				if (this.econ == null) {
+					this.econ = hookClass.getConstructor(Core.class)
+							.newInstance(this);
+					Lang.getConsoleMessageSentence(this, "AD").replace(
+							"[name]", name);
+				} else {
+					Lang.getConsoleMessageSentence(this, "AE").replace(
+							"[name]", name);
+				}
+			}
+		} catch (Exception e) {
+
+		}
+	}
+
+	private void loadEconomy() {
+		this.hookEconomy("MultiCurrency", Economy_MultiCurrency.class,
+				"me.ashtheking.currency.Currency",
+				"me.ashtheking.currency.CurrencyList");
+
+		this.hookEconomy("MineConomy", Economy_MineConomy.class,
+				"me.mjolnir.mineconomy.MineConomy");
+
+		this.hookEconomy("AEco", Economy_AEco.class, "org.neocraft.AEco.AEco");
+
+		this.hookEconomy("McMoney", Economy_McMoney.class,
+				"boardinggamer.mcmoney.McMoneyAPI");
+
+		this.hookEconomy("CraftConomy", Economy_Craftconomy.class,
+				"me.greatman.Craftconomy.Craftconomy");
+
+		this.hookEconomy("CraftConomy3", Economy_Craftconomy3.class,
+				"com.greatmancode.craftconomy3.BukkitLoader");
+
+		this.hookEconomy("eWallet", Economy_eWallet.class,
+				"me.ethan.eWallet.ECO");
+
+		this.hookEconomy("3co", Economy_3co.class, "me.ic3d.eco.ECO");
+
+		this.hookEconomy("BOSEconomy6", Economy_BOSE6.class,
+				"cosine.boseconomy.BOSEconomy",
+				"cosine.boseconomy.CommandManager");
+
+		this.hookEconomy("BOSEconomy7", Economy_BOSE7.class,
+				"cosine.boseconomy.BOSEconomy",
+				"cosine.boseconomy.CommandHandler");
+
+		this.hookEconomy("CurrencyCore", Economy_CurrencyCore.class,
+				"is.currency.Currency");
+
+		this.hookEconomy("Gringotts", Economy_Gringotts.class,
+				"org.gestern.gringotts.Gringotts");
+
+		this.hookEconomy("Essentials Economy", Economy_Essentials.class,
+				"com.earth2me.essentials.api.Economy",
+				"com.earth2me.essentials.api.NoLoanPermittedException",
+				"com.earth2me.essentials.api.UserDoesNotExistException");
+
+		this.hookEconomy("iConomy 4", Economy_iConomy4.class,
+				"com.nijiko.coelho.iConomy.iConomy",
+				"com.nijiko.coelho.iConomy.system.Account");
+
+		this.hookEconomy("iConomy 5", Economy_iConomy5.class,
+				"com.iConomy.iConomy", "com.iConomy.system.Account",
+				"com.iConomy.system.Holdings");
+
+		this.hookEconomy("iConomy 6", Economy_iConomy6.class,
+				"com.iCo6.iConomy");
+
+		this.hookEconomy("EconXP", Economy_EconXP.class,
+				"ca.agnate.EconXP.EconXP");
+
+		this.hookEconomy("GoldIsMoney", Economy_GoldIsMoney.class,
+				"com.flobi.GoldIsMoney.GoldIsMoney");
+
+		this.hookEconomy("GoldIsMoney2", Economy_GoldIsMoney2.class,
+				"com.flobi.GoldIsMoney2.GoldIsMoney");
+
+		this.hookEconomy("Dosh", Economy_Dosh.class, "com.gravypod.Dosh.Dosh");
+
+		this.hookEconomy("CommandsEX", Economy_CommandsEX.class,
+				"com.github.zathrus_writer.commandsex.api.EconomyAPI");
+
+		this.hookEconomy("SDFEconomy", Economy_SDFEconomy.class,
+				"com.github.omwah.SDFEconomy.SDFEconomy");
+
+		this.hookEconomy("XPBank", Economy_XPBank.class,
+				"com.gmail.mirelatrue.xpbank.XPBank");
+	}
+
 }
