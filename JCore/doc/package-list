@@ -1,8 +1,11 @@
+com.hotmail.joatin37.jcore
 com.hotmail.joatin37.jcore.chat
 com.hotmail.joatin37.jcore.core
 com.hotmail.joatin37.jcore.economy
+com.hotmail.joatin37.jcore.economy.plugins
+com.hotmail.joatin37.jcore.landmanagement
 com.hotmail.joatin37.jcore.language
+com.hotmail.joatin37.jcore.permission
 com.hotmail.joatin37.jcore.sql
 com.hotmail.joatin37.jcore.util
 com.hotmail.joatin37.jcore.website
-com.hotmail.joatin37.jcore.worldmap
