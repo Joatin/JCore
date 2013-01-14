@@ -31,7 +31,7 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore.worldmap;
+package com.hotmail.joatin37.jcore.landmanagement;
 
 /**
  * Used by the WorldMapCahce in order to represent a Chunk.

@@ -67,14 +67,14 @@ import com.hotmail.joatin37.jcore.economy.plugins.Economy_eWallet;
 import com.hotmail.joatin37.jcore.economy.plugins.Economy_iConomy4;
 import com.hotmail.joatin37.jcore.economy.plugins.Economy_iConomy5;
 import com.hotmail.joatin37.jcore.economy.plugins.Economy_iConomy6;
+import com.hotmail.joatin37.jcore.landmanagement.CollectionManager;
+import com.hotmail.joatin37.jcore.landmanagement.ICollectionManager;
+import com.hotmail.joatin37.jcore.landmanagement.LandHandler;
 import com.hotmail.joatin37.jcore.language.Lang;
 import com.hotmail.joatin37.jcore.sql.SQLManager;
 import com.hotmail.joatin37.jcore.util.GraphCollector;
 import com.hotmail.joatin37.jcore.website.WebPage;
 import com.hotmail.joatin37.jcore.website.WebSite;
-import com.hotmail.joatin37.jcore.worldmap.CollectionManager;
-import com.hotmail.joatin37.jcore.worldmap.ICollectionManager;
-import com.hotmail.joatin37.jcore.worldmap.LandHandler;
 
 public final class Core extends JavaPlugin implements ICore, Listener {
 

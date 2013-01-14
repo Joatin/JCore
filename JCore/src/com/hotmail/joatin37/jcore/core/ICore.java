@@ -35,8 +35,8 @@ package com.hotmail.joatin37.jcore.core;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.hotmail.joatin37.jcore.worldmap.LandHandler;
-import com.hotmail.joatin37.jcore.worldmap.ICollectionManager;
+import com.hotmail.joatin37.jcore.landmanagement.ICollectionManager;
+import com.hotmail.joatin37.jcore.landmanagement.LandHandler;
 
 public interface ICore {
 

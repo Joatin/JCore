@@ -417,6 +417,26 @@ public final class Lang {
 
 	}
 
+	public static void sendPlayerMessage(JavaPlugin plugin, String tag,
+			Player player, Object... replacements) {
+
+	}
+
+	public static void sendConsoleInfoMessage(JavaPlugin plugin, String tag,
+			Object... replacements) {
+
+	}
+
+	public static void sendConsoleWarningMessage(JavaPlugin plugin, String tag,
+			Object... replacements) {
+
+	}
+
+	public static void sendConsoleSevereMessage(JavaPlugin plugin, String tag,
+			Object... replacements) {
+
+	}
+
 	/**
 	 * Returns a String array with lines that is equal to one full line in the
 	 * chat. This might be usefull if you want to do something more with the

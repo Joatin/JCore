@@ -48,6 +48,7 @@ import com.hotmail.joatin37.jcore.NotSuportedException;
 import com.hotmail.joatin37.jcore.core.Core;
 import com.hotmail.joatin37.jcore.economy.IEconomy;
 import com.hotmail.joatin37.jcore.economy.InsufficientMoneyException;
+import com.hotmail.joatin37.jcore.language.Lang;
 
 import cosine.boseconomy.BOSEconomy;
 
@@ -70,6 +71,7 @@ public class Economy_BOSE7 implements IEconomy {
 					&& bose.getDescription().getVersion()
 							.startsWith(this.VERSION)) {
 				this.economy = (BOSEconomy) bose;
+				Lang.sendConsoleInfoMessage(core, "AF", bose);
 			}
 		}
 	}
@@ -91,6 +93,8 @@ public class Economy_BOSE7 implements IEconomy {
 						&& bose.getDescription().getVersion()
 								.startsWith(Economy_BOSE7.this.VERSION)) {
 					this.economy.economy = (BOSEconomy) bose;
+					Lang.sendConsoleInfoMessage(Economy_BOSE7.this.core, "AF",
+							bose);
 				}
 			}
 		}
@@ -141,11 +145,17 @@ public class Economy_BOSE7 implements IEconomy {
 
 	@Override
 	public boolean hasAccount(String playerName) {
+		if (playerName == null) {
+			throw new NullPointerException();
+		}
 		return this.economy.playerRegistered(playerName, false);
 	}
 
 	@Override
 	public double getBalance(String playerName) {
+		if (playerName == null) {
+			throw new NullPointerException();
+		}
 		final double balance;
 		balance = this.economy.getPlayerMoneyDouble(playerName);
 		return balance;
@@ -153,27 +163,49 @@ public class Economy_BOSE7 implements IEconomy {
 
 	@Override
 	public boolean has(String playerName, double amount) {
+		if (playerName == null) {
+			throw new NullPointerException();
+		}
 		return this.getBalance(playerName) >= amount;
 	}
 
 	@Override
 	public double withdrawPlayer(String playerName, double amount)
 			throws InsufficientMoneyException {
-		// TODO Auto-generated method stub
-		return 0;
+		if (playerName == null) {
+			throw new NullPointerException();
+		}
+		if (amount < 0) {
+			throw new IllegalArgumentException();
+		}
+		if (this.getBalance(playerName) < amount) {
+			throw new InsufficientMoneyException(amount
+					- this.getBalance(playerName), "Player " + playerName, this);
+		}
+		this.economy.setPlayerMoney(playerName, 0 - amount, false);
+		return this.getBalance(playerName);
 	}
 
 	@Override
 	public double depositPlayer(String playerName, double amount) {
-		// TODO Auto-generated method stub
-		return 0;
+		if (playerName == null) {
+			throw new NullPointerException();
+		}
+		if (amount < 0) {
+			throw new IllegalArgumentException();
+		}
+		this.economy.addPlayerMoney(playerName, amount, false);
+		return this.getBalance(playerName);
 	}
 
 	@Override
 	public double setPlayerAmount(String playerName, double amount)
 			throws InsufficientMoneyException {
-		// TODO Auto-generated method stub
-		return 0;
+		if (playerName == null) {
+			throw new NullPointerException();
+		}
+		this.economy.setPlayerMoney(playerName, amount, false);
+		return this.getBalance(playerName);
 	}
 
 	@Override
