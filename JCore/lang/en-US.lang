@@ -25,3 +25,6 @@ AD: [name] was found! Waiting...
 
 #Sent when more than one economy plugin was found
 AE: Loading [name]... Hey another economy plugin has already been found!
+
+#Sent when hooking into a plugin
+AF: §eSuccesfully hooked into [plugin]!
