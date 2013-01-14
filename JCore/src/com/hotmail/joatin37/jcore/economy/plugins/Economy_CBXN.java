@@ -40,7 +40,7 @@ import com.hotmail.joatin37.jcore.NotSuportedException;
 import com.hotmail.joatin37.jcore.economy.IEconomy;
 import com.hotmail.joatin37.jcore.economy.InsufficientMoneyException;
 
-public class Economy_Essentials implements IEconomy {
+public class Economy_CBXN implements IEconomy {
 
 	@Override
 	public boolean hasBankSupport() {

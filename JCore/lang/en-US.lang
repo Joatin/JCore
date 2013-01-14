@@ -1,12 +1,14 @@
-#This is the english lang file. 
+latin: true
+
+#This is the english language file. 
 #All the lines that starts with a # is a comment line,
 #those lines are ignored.
-#Use this lang file as a reference when translate all to all the other languages.
+#Use this language file as a reference when translate all to all the other languages.
 #A sentence line starts with the tag which shall always be a two uppercase letter combination. AA-ZZ,
 #followed by a : sign.
 #You can not use line breaks.
 #If you want to make a line break in the output, make a new line with the same tag.
-#This lang file is used to send messages to both players and the console.
+#This language file is used to send messages to both players and the console.
 
 
 #Just a sentence used for debug

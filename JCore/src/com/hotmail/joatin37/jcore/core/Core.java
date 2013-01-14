@@ -91,7 +91,7 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 	private static Core core;
 	private Lang lang;
 	private boolean usingCustomLang;
-	private String defaultLanguage;
+	private String defaultLanguage = "zh-TW";
 	private IEconomy econ;
 
 	public Core() {
@@ -179,7 +179,7 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 		}
 		this.metrics = new GraphCollector(this);
 		Core.sendDebug(Lang.getConsoleMessageSentence(this, "AA"));
-		this.loadEconomy();
+		// this.loadEconomy();
 	}
 
 	@Override

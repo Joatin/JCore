@@ -51,5 +51,6 @@
 	<classpathentry kind="lib" path="libs/Starburst.jar"/>
 	<classpathentry kind="lib" path="libs/XPBank.jar"/>
 	<classpathentry kind="lib" path="libs/zPermissions.jar"/>
+	<classpathentry kind="lib" path="libs/CBXN Economy.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
