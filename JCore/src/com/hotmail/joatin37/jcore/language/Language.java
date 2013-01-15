@@ -93,4 +93,8 @@ public class Language extends HashMap<String, String> {
 		} catch (Exception e) {
 		}
 	}
+
+	public boolean isLatin() {
+		return this.isLatin;
+	}
 }
