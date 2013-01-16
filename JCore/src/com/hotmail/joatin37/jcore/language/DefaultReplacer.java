@@ -14,12 +14,12 @@ public class DefaultReplacer extends TagReplacer {
 	 * Constructs a new instance
 	 */
 	public DefaultReplacer() {
-
+		super();
 	}
 
 	@Override
-	public void replace(String message, List<Object> replacements) {
-		return;
+	public String replace(String message, List<Object> replacements) {
+		return null;
 	}
 
 }

@@ -12,7 +12,7 @@ latin: true
 
 
 #Just a sentence used for debug
-AA: §eLanguage Works!
+AA: §eLanguage Works! The tag was [tag]
 
 #The error if a language tag is missing within a plugin.
 AB: §4The language tag, [tag] inside [plugin] wasn't found!

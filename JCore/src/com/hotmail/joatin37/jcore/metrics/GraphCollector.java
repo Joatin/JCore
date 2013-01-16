@@ -31,13 +31,14 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore.util;
+package com.hotmail.joatin37.jcore.metrics;
 
 import java.io.IOException;
 import java.util.Iterator;
 
 import com.hotmail.joatin37.jcore.core.Core;
-import com.hotmail.joatin37.jcore.util.BukkitMetrics.Graph;
+import com.hotmail.joatin37.jcore.language.Lang;
+import com.hotmail.joatin37.jcore.metrics.BukkitMetrics.Graph;
 
 public class GraphCollector {
 	private BukkitMetrics metrics;
@@ -54,27 +55,60 @@ public class GraphCollector {
 				core.getLogger().info("Couldn't create metrics");
 			}
 		}
-		this.CreateExtensionGraph();
 
 	}
 
-	public void CreateExtensionGraph() {
-		Graph graph = this.metrics.createGraph("Plugins using JCore");
-		Iterator<String> it = this.core.getExtensionNames().iterator();
+	public void CreatePluginUsingLanguageGraph() {
+		Graph graph = this.metrics.createGraph("Plugins using language");
+		Iterator<String> it = Lang.getPluginsUsing().iterator();
 		while (it.hasNext()) {
-			graph.addPlotter(new exPlotter(it.next()));
+			graph.addPlotter(new PluginUsingLanguagePlotter(it.next()));
 		}
-		this.metrics.addGraph(graph);
 	}
 
-	public class exPlotter extends BukkitMetrics.Plotter {
-		protected exPlotter(String name) {
+	public void CreatePlayerUsingLanguageGraph() {
+
+	}
+
+	public void CreatePluginUsingLandManagementGraph() {
+
+	}
+
+	public void CreatePluginUsingWebsiteGraph() {
+
+	}
+
+	public void CreatePlayerVistingWebsiteGraph() {
+
+	}
+
+	public void CreatePluginUsingSQLGraph() {
+
+	}
+
+	public void CreateEconomyPluginGraph() {
+
+	}
+
+	public void CreateChatPluginGraph() {
+
+	}
+
+	public void CreatePermissionPluginGraph() {
+
+	}
+
+	public class PluginUsingLanguagePlotter extends BukkitMetrics.Plotter {
+
+		PluginUsingLanguagePlotter(String name) {
 			super(name);
 		}
 
 		@Override
 		public int getValue() {
+			// TODO Auto-generated method stub
 			return 1;
 		}
+
 	}
 }

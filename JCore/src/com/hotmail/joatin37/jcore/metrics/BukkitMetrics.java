@@ -25,7 +25,7 @@
  * authors and contributors and should not be interpreted as representing official policies,
  * either expressed or implied, of anybody else.
  */
-package com.hotmail.joatin37.jcore.util;
+package com.hotmail.joatin37.jcore.metrics;
 
 
 import org.bukkit.Bukkit;

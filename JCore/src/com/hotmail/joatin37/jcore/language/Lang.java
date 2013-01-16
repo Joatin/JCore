@@ -34,6 +34,8 @@
 package com.hotmail.joatin37.jcore.language;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Vector;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -61,12 +63,12 @@ import com.hotmail.joatin37.jcore.core.Core;
  */
 public final class Lang {
 
-	private static HashMap<String, HashMap<String, Language>> langfiles = new HashMap<String, HashMap<String, Language>>();
+	private static HashMap<String, HashMap<Tag, Language>> langfiles = new HashMap<String, HashMap<Tag, Language>>();
 	private static HashMap<String, JavaPlugin> plugins = new HashMap<String, JavaPlugin>();
 	private static HashMap<String, TagReplacer> replacers = new HashMap<String, TagReplacer>();
 	private static final TagReplacer DEFAULTREPLACER = new DefaultReplacer();
-	private static HashMap<String, String> playerlangs = new HashMap<String, String>();
-	private static String deflang = "en-US";
+	private static HashMap<String, Tag> playerlangs = new HashMap<String, Tag>();
+	private static Tag deflang = Tag.enUS;
 	private static boolean isCustom = false;
 	private static Core core;
 
@@ -81,25 +83,73 @@ public final class Lang {
 	 */
 	public static final String FILEENDING = ".lang";
 
-	/**
-	 * This is a list of all language tags, following the IETF standard with one
-	 * region tag, that this class will try to load from each plugin. If you
-	 * wan't to add a language that is missing here please contact the developer
-	 * and he will add it as soon as possible.
-	 * <p>
-	 * The current tags in the list are:
-	 * <p>
-	 * "en-US", "sv-SE", "zh-TW", "en-UK", "se-DE", "es-ES", "es-MX", "fr-FR",
-	 * "it-IT", "ja-JP", "ko-KR", "pl-PL", "pt-BR", "ru-RU", "zh-CN"
-	 */
-	public static final String[] SUPORTEDLANGS = new String[] { "en-US",
-			"sv-SE", "zh-TW", "en-UK", "se-DE", "es-ES", "es-MX", "fr-FR",
-			"it-IT", "ja-JP", "ko-KR", "pl-PL", "pt-BR", "ru-RU", "zh-CN" };
-
 	private static final int LINEWIDTH = 100;
 
 	/**
-	 * Used to set JCore reference inside your class. If you use this it wont
+	 * A enum conatianing the languages that can be used with this class. If you
+	 * wan't additional languages in it, contact the developer and he will add
+	 * it as soon as he can.
+	 * 
+	 * @author Joatin
+	 * @since 1.0.0
+	 */
+	public enum Tag {
+		svSE("sv-SE", "Svenska Sverige", "Swedish Sweden"), zhTW("zh-TW",
+				"中國台灣省，中國", "Traditional-Chinese Taiwan Province of China"), enUK(
+				"en-UK", "English United Kingdom", "English United Kingdom"), enUS(
+				"en-US", "English United States of America",
+				"English United States of America"), deDE("de-DE",
+				"Deutsch Deutschland", "German Germany"), esES("es-ES",
+				"Españoles Castellano España", "Spanish-Castilian Spain"), esMX(
+				"es-MX", "Españoles México", "Spanish Mexico"), frFR("fr-FR",
+				"Français France", "French France"), itIT("it-IT",
+				"Italiano Italia", "Italian Italy"), jaJP("ja-JP", "日本日本",
+				"Japanese Japan"), koKR("ko-KR", "한국 한국 대한민국",
+				"Korean Republic of Korea"), plPL("pl-PL", "Polsko Polska",
+				"Polish Poland"), ptBR("pt-BR", "Português Brasil",
+				"Portuguese Brazil"), ruRU("ru-RU",
+				"Русский Русский Федерации", "Russian Russian Federation"), zhCN(
+				"zh-CN", "中国中国", "Chinese China");
+
+		private final String tag;
+		private final String langname;
+		private final String langnameenglish;
+
+		private Tag(String tag, String langname, String langnameenglish) {
+			this.tag = tag;
+			this.langname = langname;
+			this.langnameenglish = langnameenglish;
+		}
+
+		@Override
+		public String toString() {
+			return this.tag;
+		}
+
+		/**
+		 * Returns the tag as the full language name and region on the localized
+		 * language.
+		 * 
+		 * @return A string with the language
+		 * @since 1.0.0
+		 */
+		public String getLanguageString() {
+			return this.langname;
+		}
+
+		/**
+		 * Returns the tag as the full language name and region in english.
+		 * 
+		 * @return A string with the language
+		 * @since 1.0.0
+		 */
+		public String GetLanguageStringEnglish() {
+			return this.langnameenglish;
+		}
+	}
+
+	/**
+	 * Used to set JCore reference inside the class. If you use this it wont
 	 * have any effect.
 	 * 
 	 * @throws NullPointerException
@@ -133,21 +183,22 @@ public final class Lang {
 		}
 		Core.sendDebug("Started loading: " + plugin.getName());
 		plugins.put(plugin.getName(), plugin);
-		langfiles.put(plugin.getName(), new HashMap<String, Language>());
-		for (int i = 0; i < SUPORTEDLANGS.length; i++) {
+		langfiles.put(plugin.getName(), new HashMap<Tag, Language>());
+		Tag[] tags = Tag.values();
+		for (int i = 0; i < tags.length; i++) {
 			try {
 				Language lang = new Language(Lang.core, plugin,
-						SUPORTEDLANGS[i]);
-				langfiles.get(plugin.getName()).put(SUPORTEDLANGS[i], lang);
-				Core.sendDebug("Succesfully added " + SUPORTEDLANGS[i]);
+						tags[i].toString());
+				langfiles.get(plugin.getName()).put(tags[i], lang);
+				Core.sendDebug("Succesfully added " + tags[i].toString());
 			} catch (Exception e) {
-				Core.sendDebug("Didn't create " + SUPORTEDLANGS[i]);
+				Core.sendDebug("Didn't create " + tags[i].toString());
 			}
 		}
 	}
 
 	private static String getMessage(JavaPlugin plugin, String tag,
-			String langtag, boolean forceLatin, Object... replacements) {
+			Tag langtag, boolean forceLatin, Object[] replacements) {
 		if (plugin == null) {
 			throw new NullPointerException(
 					"JavaPlugin was null! This is caused by a mallfunctioning plugin");
@@ -170,7 +221,7 @@ public final class Lang {
 		if (!langfiles.containsKey(plugin.getName())) {
 			loadPluginLanguages(plugin);
 		}
-		Language lang = langfiles.get(plugin.getName()).get(deflang);
+		Language lang = langfiles.get(plugin.getName()).get(langtag);
 		if (lang == null) {
 			lang = langfiles.get(plugin.getName()).get(DEFAULTLANGAUGE);
 			if (lang == null) {
@@ -203,17 +254,16 @@ public final class Lang {
 		}
 		TagReplacer rep = replacers.get(plugin.getName());
 		if (rep == null) {
-			message = DEFAULTREPLACER.doReplace(message, tag, replacements);
+			return DEFAULTREPLACER.doReplace(message, tag, replacements);
 		} else {
-			rep.doReplace(message, tag, replacements);
+			return rep.doReplace(message, tag, replacements);
 		}
-		return message;
 
 	}
 
 	public static String[] getPlayerMessageSentence(JavaPlugin plugin,
 			String tag, String player, Object... replacements) {
-		String lang = playerlangs.get(player);
+		Tag lang = playerlangs.get(player);
 		if (lang == null) {
 			lang = deflang;
 		}
@@ -226,14 +276,14 @@ public final class Lang {
 	public static String getConsoleMessageSentence(JavaPlugin plugin,
 			String tag, Object... replacements) {
 		return Lang.getMessage(plugin, tag, deflang, true, replacements)
-				.replaceAll("�0", "").replaceAll("�1", "").replaceAll("�2", "")
-				.replaceAll("�3", "").replaceAll("�4", "").replaceAll("�5", "")
-				.replaceAll("�6", "").replaceAll("�7", "").replaceAll("�8", "")
-				.replaceAll("�9", "").replaceAll("�a", "").replaceAll("�b", "")
-				.replaceAll("�c", "").replaceAll("�d", "").replaceAll("�e", "")
-				.replaceAll("�f", "").replaceAll("�k", "").replaceAll("�l", "")
-				.replaceAll("�m", "").replaceAll("�n", "").replaceAll("�o", "")
-				.replaceAll("�r", "");
+				.replaceAll("§0", "").replaceAll("§1", "").replaceAll("§2", "")
+				.replaceAll("§3", "").replaceAll("§4", "").replaceAll("§5", "")
+				.replaceAll("§6", "").replaceAll("§7", "").replaceAll("§8", "")
+				.replaceAll("§9", "").replaceAll("§a", "").replaceAll("§b", "")
+				.replaceAll("§c", "").replaceAll("§d", "").replaceAll("§e", "")
+				.replaceAll("§f", "").replaceAll("§k", "").replaceAll("§l", "")
+				.replaceAll("§m", "").replaceAll("§n", "").replaceAll("§o", "")
+				.replaceAll("§r", "");
 
 	}
 
@@ -259,6 +309,18 @@ public final class Lang {
 			Object... replacements) {
 		plugin.getLogger().severe(
 				Lang.getConsoleMessageSentence(plugin, tag, replacements));
+	}
+
+	public static List<String> getPluginsUsing() {
+		return new Vector<String>(langfiles.keySet());
+	}
+
+	public static Tag getPlayerLanguage(String player) {
+		if (playerlangs.get(player) != null) {
+			return playerlangs.get(player);
+		} else {
+			return deflang;
+		}
 	}
 
 }

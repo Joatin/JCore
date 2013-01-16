@@ -35,11 +35,8 @@ public abstract class TagReplacer {
 	 * @since 1.0.0
 	 */
 	public final String doReplace(String message, String tag,
-			Object... replacements) {
-		if (message == null) {
-			throw new NullPointerException();
-		}
-		if (tag == null) {
+			Object[] replacements) {
+		if (message == null || tag == null) {
 			throw new NullPointerException();
 		}
 		List<Object> list = Arrays.asList(replacements);
@@ -48,19 +45,21 @@ public abstract class TagReplacer {
 		while (it.hasNext()) {
 			Object obj = it.next();
 			if (obj instanceof String) {
-				message.replaceAll("[text" + string + "]", (String) obj);
+				message = message.replace("[text" + string + "]", (String) obj);
 				it.remove();
 				string++;
 				continue;
 			}
 			if (obj instanceof OfflinePlayer) {
-				message.replaceAll("[player]", ((OfflinePlayer) obj).getName());
+				message = message.replace("[player]",
+						((OfflinePlayer) obj).getName());
 				it.remove();
 				continue;
 			}
 			if (obj instanceof JavaPlugin) {
-				message.replaceAll("[plugin]", ((JavaPlugin) obj).getName());
-				message.replaceAll("[version]", ((JavaPlugin) obj)
+				message = message.replace("[plugin]",
+						((JavaPlugin) obj).getName());
+				message = message.replace("[version]", ((JavaPlugin) obj)
 						.getDescription().getVersion());
 				it.remove();
 				continue;
@@ -74,15 +73,17 @@ public abstract class TagReplacer {
 				this.ParseEntity((Entity) obj);
 			}
 		}
-		message.replaceAll("[tag]", tag).replaceAll("[version]", "version")
-				.replaceAll("[player]", "player")
-				.replaceAll("[block]", "block")
-				.replaceAll("[entity]", "entity")
-				.replaceAll("[plugin]", "plugin").replaceAll("[text1]", "?")
-				.replaceAll("[text2]", "?").replaceAll("[text3]", "?")
-				.replaceAll("[text4]", "?").replaceAll("[text5]", "?");
+		message = message.replace("[tag]", tag).replace("[version]", "version")
+				.replace("[player]", "player").replace("[block]", "block")
+				.replace("[entity]", "entity").replace("[plugin]", "plugin")
+				.replace("[text1]", "?").replace("[text2]", "?")
+				.replace("[text3]", "?").replace("[text4]", "?")
+				.replace("[text5]", "?");
 
-		this.replace(message, list);
+		String s = this.replace(message, list);
+		if (s != null) {
+			message = s;
+		}
 
 		return message;
 	}
@@ -98,7 +99,7 @@ public abstract class TagReplacer {
 	 *            The object used for replacing.
 	 * @since 1.0.0
 	 */
-	public abstract void replace(String message, List<Object> replacements);
+	public abstract String replace(String message, List<Object> replacements);
 
 	private String ParseBlock(Block block) {
 		return block.getType().toString();

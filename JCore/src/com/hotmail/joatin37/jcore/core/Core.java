@@ -39,6 +39,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -71,8 +72,10 @@ import com.hotmail.joatin37.jcore.landmanagement.CollectionManager;
 import com.hotmail.joatin37.jcore.landmanagement.ICollectionManager;
 import com.hotmail.joatin37.jcore.landmanagement.LandHandler;
 import com.hotmail.joatin37.jcore.language.Lang;
+import com.hotmail.joatin37.jcore.language.Lang.Tag;
+import com.hotmail.joatin37.jcore.metrics.GraphCollector;
 import com.hotmail.joatin37.jcore.sql.SQLManager;
-import com.hotmail.joatin37.jcore.util.GraphCollector;
+import com.hotmail.joatin37.jcore.util.Lock;
 import com.hotmail.joatin37.jcore.website.WebPage;
 import com.hotmail.joatin37.jcore.website.WebSite;
 
@@ -91,8 +94,9 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 	private static Core core;
 	private Lang lang;
 	private boolean usingCustomLang;
-	private String defaultLanguage = "zh-TW";
+	private Tag defaultLanguage = Tag.enUS;
 	private IEconomy econ;
+	private Lock lock;
 
 	public Core() {
 		DEBUGG = true;
@@ -109,7 +113,7 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 		return this.econ;
 	}
 
-	public String defLanguage() {
+	public Tag defLanguage() {
 		return this.defaultLanguage;
 	}
 
@@ -150,6 +154,7 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 
 	@Override
 	public void onLoad() {
+		this.lock = new Lock(this);
 		Core.core = this;
 		this.lang = new Lang(this);
 		if (this.getConfig().getBoolean("sql.enable", false)) {
@@ -172,6 +177,29 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 
 	@Override
 	public void onEnable() {
+		// Making a COOOL intro
+
+		this.getServer()
+				.getConsoleSender()
+				.sendMessage(
+						ChatColor.GREEN
+								+ "\n\n"
+								+ ""
+								+ " ============================================================================== \n"
+								+ "\n"
+								+ "         #  #####                 #\n"
+								+ "         #  #                     #                       #\n"
+								+ "         #  #                     #                                     #\n"
+								+ "         #  #     ##### # # ##    #      #####   #   ###  # #   #  #### #\n"
+								+ "         #  #     #   # ## #  #   #      #   #  # #  #  # # ##  # #     #\n"
+								+ "     #   #  #     #   # #  ####   #      #   # ##### #  # # # # # #  ## #\n"
+								+ "     #   #  #     #   # #  #      #      #   # #   # #  # # #  ## #   #\n"
+								+ "      ###   ##### ##### #   ##    ###### ##### #   # ###  # #   #  ###  #\n"
+								+ "\n"
+								+ " ============================================================================== ");
+
+		// End of intro
+		this.getLogger().info(Thread.currentThread().getName());
 		this.saveDefaultConfig();
 		this.manager.onInit();
 		if (this.getConfig().getBoolean("website.enabled", false)) {
