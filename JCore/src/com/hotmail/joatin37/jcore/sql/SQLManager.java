@@ -36,7 +36,10 @@ package com.hotmail.joatin37.jcore.sql;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
+
+import org.bukkit.plugin.java.JavaPlugin;
 
 import com.hotmail.joatin37.jcore.core.Core;
 
@@ -65,4 +68,16 @@ public class SQLManager {
 		}
 	}
 
+	public void getSQL(JavaPlugin plugin) {
+		Statement stmt;
+		try {
+			stmt = this.conn.createStatement();
+			String sql = "IF EXISTS (SELECT NAME FROM sysdatabases WHERE NAME = 'database_to_check_for') PRINT 'exists' ELSE PRINT 'does not exist'";
+			stmt.executeUpdate(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 }

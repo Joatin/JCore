@@ -139,6 +139,7 @@ public final class Lang {
 				Language lang = new Language(Lang.core, plugin,
 						SUPORTEDLANGS[i]);
 				langfiles.get(plugin.getName()).put(SUPORTEDLANGS[i], lang);
+				Core.sendDebug("Succesfully added " + SUPORTEDLANGS[i]);
 			} catch (Exception e) {
 				Core.sendDebug("Didn't create " + SUPORTEDLANGS[i]);
 			}

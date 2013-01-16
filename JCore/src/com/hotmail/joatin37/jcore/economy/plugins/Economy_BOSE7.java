@@ -46,7 +46,9 @@ import org.bukkit.plugin.Plugin;
 import com.hotmail.joatin37.jcore.InsufficientPrivilegeException;
 import com.hotmail.joatin37.jcore.NotSuportedException;
 import com.hotmail.joatin37.jcore.core.Core;
+import com.hotmail.joatin37.jcore.economy.EconomyDescription;
 import com.hotmail.joatin37.jcore.economy.IEconomy;
+import com.hotmail.joatin37.jcore.economy.IllegalBankNameException;
 import com.hotmail.joatin37.jcore.economy.InsufficientMoneyException;
 import com.hotmail.joatin37.jcore.language.Lang;
 
@@ -182,7 +184,7 @@ public class Economy_BOSE7 implements IEconomy {
 			throw new InsufficientMoneyException(amount
 					- this.getBalance(playerName), "Player " + playerName, this);
 		}
-		this.economy.setPlayerMoney(playerName, 0 - amount, false);
+		this.economy.setPlayerMoney(playerName, 0d - amount, false);
 		return this.getBalance(playerName);
 	}
 
@@ -237,70 +239,156 @@ public class Economy_BOSE7 implements IEconomy {
 	@Override
 	public double bankWithdraw(String bank, double amount)
 			throws InsufficientMoneyException, NotSuportedException {
-		// TODO Auto-generated method stub
-		return 0;
+		if (bank == null) {
+			throw new NullPointerException();
+		}
+		if (amount < 0) {
+			throw new IllegalArgumentException();
+		}
+		if (!this.economy.bankExists(bank)) {
+			throw new IllegalBankNameException();
+		}
+		this.economy.setBankMoney(bank, 0d - amount, true);
+		return this.economy.getBankMoneyDouble(bank);
 	}
 
 	@Override
 	public double bankDeposit(String bank, double amount)
 			throws NotSuportedException {
-		// TODO Auto-generated method stub
-		return 0;
+		if (bank == null) {
+			throw new NullPointerException();
+		}
+		if (amount < 0) {
+			throw new IllegalArgumentException();
+		}
+		if (!this.economy.bankExists(bank)) {
+			throw new IllegalBankNameException();
+		}
+		this.economy.addBankMoney(bank, amount, true);
+		return this.economy.getBankMoneyDouble(bank);
 	}
 
 	@Override
 	public double setBankAmount(String bank, double amount)
 			throws InsufficientMoneyException, NotSuportedException {
-		// TODO Auto-generated method stub
-		return 0;
+		if (bank == null) {
+			throw new NullPointerException();
+		}
+		if (amount < 0) {
+			throw new IllegalArgumentException();
+		}
+		if (!this.economy.bankExists(bank)) {
+			throw new IllegalBankNameException();
+		}
+		this.economy.setBankMoney(bank, amount, true);
+		return this.economy.getBankMoneyDouble(bank);
 	}
 
 	@Override
 	public boolean isBankOwner(String bank, String playerName)
-			throws NotSuportedException {
-		// TODO Auto-generated method stub
-		return false;
+			throws NotSuportedException, IllegalBankNameException {
+		if (bank == null || playerName == null) {
+			throw new NullPointerException();
+		}
+		if (!this.economy.bankExists(bank)) {
+			throw new IllegalBankNameException();
+		}
+
+		return this.economy.isBankOwner(bank, playerName);
 	}
 
 	@Override
-	public boolean isBankMember(String name, String playerName)
+	public boolean isBankMember(String bank, String playerName)
 			throws NotSuportedException {
-		// TODO Auto-generated method stub
-		return false;
+		if (bank == null || playerName == null) {
+			throw new NullPointerException();
+		}
+		if (!this.economy.bankExists(bank)) {
+			throw new IllegalBankNameException();
+		}
+		return this.economy.isBankMember(bank, playerName);
 	}
 
 	@Override
 	public void addBankMember(String bank, String playerName)
-			throws InsufficientPrivilegeException, NotSuportedException {
-		// TODO Auto-generated method stub
-
+			throws InsufficientPrivilegeException, NotSuportedException,
+			IllegalBankNameException {
+		if (bank == null || playerName == null) {
+			throw new NullPointerException();
+		}
+		if (!this.economy.bankExists(bank)) {
+			throw new IllegalBankNameException();
+		}
+		this.economy.addBankMember(bank, playerName, true);
 	}
 
 	@Override
 	public void removeBankMember(String bank, String playerName)
 			throws InsufficientPrivilegeException, NotSuportedException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public String changeBankOwner(String bank, String playerName)
-			throws InsufficientPrivilegeException, NotSuportedException {
-		// TODO Auto-generated method stub
-		return null;
+		if (bank == null || playerName == null) {
+			throw new NullPointerException();
+		}
+		if (!this.economy.bankExists(bank)) {
+			throw new IllegalBankNameException();
+		}
+		this.economy.removeBankPlayer(bank, playerName);
 	}
 
 	@Override
 	public List<String> getBanks() throws NotSuportedException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.economy.getBankList();
 	}
 
 	@Override
 	public void createPlayerAccount(String playerName)
 			throws InsufficientPrivilegeException, NotSuportedException {
-		// TODO Auto-generated method stub
+		this.economy.registerPlayer(playerName);
 
+	}
+
+	@Override
+	public void addBankOwner(String bank, String playerName)
+			throws InsufficientPrivilegeException, NotSuportedException,
+			IllegalBankNameException {
+		if (bank == null || playerName == null) {
+			throw new NullPointerException();
+		}
+		if (!this.economy.bankExists(bank)) {
+			throw new IllegalBankNameException();
+		}
+		this.economy.addBankOwner(bank, playerName, true);
+
+	}
+
+	@Override
+	public void removeBankOwner(String bank, String playerName)
+			throws NotSuportedException, IllegalBankNameException {
+		if (bank == null || playerName == null) {
+			throw new NullPointerException();
+		}
+		if (!this.economy.bankExists(bank)) {
+			throw new IllegalBankNameException();
+		}
+		this.economy.removeBankPlayer(bank, playerName);
+
+	}
+
+	@Override
+	public List<String> getBankMembers(String bank)
+			throws NotSuportedException, IllegalBankNameException {
+		throw new NotSuportedException();
+	}
+
+	@Override
+	public List<String> getBankOwners() throws NotSuportedException,
+			IllegalBankNameException {
+		throw new NotSuportedException();
+	}
+
+	@Override
+	public EconomyDescription getEconomyDescription() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

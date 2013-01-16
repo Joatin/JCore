@@ -56,14 +56,17 @@ public class Language extends HashMap<String, String> {
 			throw new NullPointerException("JavaPlugin was null");
 		}
 		BufferedReader input = new BufferedReader(new InputStreamReader(
-				plugin.getResource(language)));
+				plugin.getResource("lang/" + language + Lang.FILEENDING)));
 		String s;
 		int i = 1;
 		String[] latin = input.readLine().split(":", 2);
-		if (!latin[0].equalsIgnoreCase("latin")) {
+		if (!latin[0].trim().equalsIgnoreCase("latin")) {
 			core.getLogger()
 					.warning(
-							"Line latin was misspelled or missing att the first line of the file, the line \"latin: true\" or \"latin: false\" must be at the very first line of the file.\n"
+							"Line latin was misspelled or missing att the first line of the file "
+									+ language
+									+ Lang.FILEENDING
+									+ ", the line \"latin: true\" or \"latin: false\" must be at the very first line of the file.\n"
 									+ "Error was found in the plugin: "
 									+ plugin.getName());
 			throw new Exception();
@@ -72,19 +75,24 @@ public class Language extends HashMap<String, String> {
 		}
 		while ((s = input.readLine()) != null) {
 			i++;
-			String[] split = s.split(":", 2);
-			if (split.length == 2) {
-				if (split[0].trim().length() != 2) {
-					core.getLogger()
-							.warning(
-									"Malformed tag at line: "
-											+ i
-											+ ", in plugin: "
-											+ plugin.getName()
-											+ "\n A tag may only be exactly two uppercase caracters ranging from AA-ZZ");
-					throw new Exception();
-				} else {
-					this.put(split[0].trim().toUpperCase(), split[1]);
+			if (!s.startsWith("#")) {
+				String[] split = s.split(":", 2);
+				if (split.length == 2) {
+
+					if (split[0].trim().length() != 2) {
+						core.getLogger()
+								.warning(
+										"Malformed tag at line: "
+												+ i
+												+ ", in plugin: "
+												+ plugin.getName()
+												+ "\n A tag may only be exactly two uppercase caracters ranging from AA-ZZ\n"
+												+ "Inside file " + language
+												+ Lang.FILEENDING);
+						throw new Exception();
+					} else {
+						this.put(split[0].trim().toUpperCase(), split[1]);
+					}
 				}
 			}
 		}

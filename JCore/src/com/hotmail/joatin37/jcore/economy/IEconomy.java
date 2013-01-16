@@ -180,7 +180,7 @@ public interface IEconomy {
 
 	/**
 	 * Numbers in this method can be both positive and negative. Positive
-	 * numbers adds more money to the players acount while a negative removes
+	 * numbers adds more money to the players account while a negative removes
 	 * money.
 	 * 
 	 * @param playerName
@@ -217,7 +217,8 @@ public interface IEconomy {
 			throws InsufficientPrivilegeException, NotSuportedException;
 
 	/**
-	 * Deletes a bank account with the specified name.
+	 * Deletes a bank account with the specified name. The bank doesn't have to
+	 * exist.
 	 * 
 	 * @param bank
 	 * @throws NotSuportedException
@@ -235,11 +236,14 @@ public interface IEconomy {
 	 * @return The banks current amount
 	 * @throws NotSuportedException
 	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
 	 * @throws NullPointerException
 	 *             if the parameter bank was null
 	 * @since 1.0.0
 	 */
-	public double bankBalance(String bank) throws NotSuportedException;
+	public double bankBalance(String bank) throws NotSuportedException,
+			IllegalBankNameException;
 
 	/**
 	 * Returns true or false whether the bank has the amount specified, will
@@ -250,12 +254,14 @@ public interface IEconomy {
 	 * @return True if the bank has the specified amount
 	 * @throws NotSuportedException
 	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
 	 * @throws NullPointerException
 	 *             if the parameter bank was null
 	 * @since 1.0.0
 	 */
 	public boolean bankHas(String bank, double amount)
-			throws NotSuportedException;
+			throws NotSuportedException, IllegalBankNameException;
 
 	/**
 	 * Withdraw an amount from a bank account, can not negative.
@@ -267,6 +273,8 @@ public interface IEconomy {
 	 *             if the player doesn't have enough money
 	 * @throws NotSuportedException
 	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
 	 * @throws IllegalArgumentException
 	 *             if the amount is less than 0
 	 * @throws NullPointerException
@@ -275,7 +283,8 @@ public interface IEconomy {
 	 * @see InsufficientMoneyException
 	 */
 	public double bankWithdraw(String bank, double amount)
-			throws InsufficientMoneyException, NotSuportedException;
+			throws InsufficientMoneyException, NotSuportedException,
+			IllegalBankNameException;
 
 	/**
 	 * Deposit an amount into a bank account. Can not be negative.
@@ -286,6 +295,8 @@ public interface IEconomy {
 	 * 
 	 * @throws NotSuportedException
 	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
 	 * @throws IllegalArgumentException
 	 *             if the amount is less than 0
 	 * @throws NullPointerException
@@ -293,7 +304,7 @@ public interface IEconomy {
 	 * @since 1.0.0
 	 */
 	public double bankDeposit(String bank, double amount)
-			throws NotSuportedException;
+			throws NotSuportedException, IllegalBankNameException;
 
 	/**
 	 * Adds or removes a the amount specified. The amount can be either positive
@@ -309,6 +320,8 @@ public interface IEconomy {
 	 *             if the player doesn't have enough money
 	 * @throws NotSuportedException
 	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
 	 * @throws IllegalArgumentException
 	 *             if the amount is less than 0
 	 * @throws NullPointerException
@@ -317,7 +330,8 @@ public interface IEconomy {
 	 * @see InsufficientMoneyException
 	 */
 	public double setBankAmount(String bank, double amount)
-			throws InsufficientMoneyException, NotSuportedException;
+			throws InsufficientMoneyException, NotSuportedException,
+			IllegalBankNameException;
 
 	/**
 	 * Check if a player is the owner of a bank account
@@ -327,12 +341,14 @@ public interface IEconomy {
 	 * @return True if he is
 	 * @throws NotSuportedException
 	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
 	 * @throws NullPointerException
 	 *             if any of the parameters is null
 	 * @since 1.0.0
 	 */
 	public boolean isBankOwner(String bank, String playerName)
-			throws NotSuportedException;
+			throws NotSuportedException, IllegalBankNameException;
 
 	/**
 	 * Check if the player is a member of the bank account
@@ -343,12 +359,14 @@ public interface IEconomy {
 	 * 
 	 * @throws NotSuportedException
 	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
 	 * @throws NullPointerException
 	 *             if any of the parameters is null
 	 * @since 1.0.0
 	 */
 	public boolean isBankMember(String name, String playerName)
-			throws NotSuportedException;
+			throws NotSuportedException, IllegalBankNameException;
 
 	/**
 	 * Adds a new member to a bank. Does nothing if the player already is a
@@ -359,6 +377,8 @@ public interface IEconomy {
 	 * @throws InsufficientPrivilegeException
 	 *             If the player doesn't have enough privileges. Only thrown by
 	 *             certain plugins.
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
 	 * @throws NotSuportedException
 	 *             if the underlying plugin does not suport this operation
 	 * @throws NullPointerException
@@ -366,7 +386,8 @@ public interface IEconomy {
 	 * @since 1.0.0
 	 */
 	public void addBankMember(String bank, String playerName)
-			throws InsufficientPrivilegeException, NotSuportedException;
+			throws InsufficientPrivilegeException, NotSuportedException,
+			IllegalBankNameException;
 
 	/**
 	 * Removes a player as a member of a bank.
@@ -377,6 +398,8 @@ public interface IEconomy {
 	 * @throws InsufficientPrivilegeException
 	 *             If the player doesn't have enough privileges. Only thrown by
 	 *             certain plugins.
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
 	 * @throws NotSuportedException
 	 *             if the underlying plugin does not suport this operation
 	 * @throws NullPointerException
@@ -384,24 +407,69 @@ public interface IEconomy {
 	 * @since 1.0.0
 	 */
 	public void removeBankMember(String bank, String playerName)
-			throws InsufficientPrivilegeException, NotSuportedException;
+			throws InsufficientPrivilegeException, NotSuportedException,
+			IllegalBankNameException;
 
 	/**
-	 * Changes the owner of a bank.
+	 * Adds a owner to a bank.
 	 * 
 	 * @param bank
 	 * @param playerName
-	 * @return The old owner
 	 * @throws NotSuportedException
 	 *             if the underlying plugin does not suport this operation
 	 * @throws InsufficientPrivilegeException
 	 *             If the new owner doesn't have enough privileges
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
 	 * @throws NullPointerException
 	 *             if any of the parameters was null
 	 * @since 1.0.0
 	 */
-	public String changeBankOwner(String bank, String playerName)
-			throws InsufficientPrivilegeException, NotSuportedException;
+	public void addBankOwner(String bank, String playerName)
+			throws InsufficientPrivilegeException, NotSuportedException,
+			IllegalBankNameException;
+
+	/**
+	 * Removes a owner from a bank.
+	 * 
+	 * @param bank
+	 * @param playerName
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
+	 * @throws NullPointerException
+	 *             if any of the parameters was null
+	 * @since 1.0.0
+	 */
+	public void removeBankOwner(String bank, String playerName)
+			throws NotSuportedException, IllegalBankNameException;
+
+	/**
+	 * Returns a list of a banks members, including owners.
+	 * 
+	 * @param bank
+	 * @return A list with the banks members
+	 * @throws NotSuportedException
+	 *             If the method isn't suported by the underlying plugin.
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exist.
+	 */
+	public List<String> getBankMembers(String bank)
+			throws NotSuportedException, IllegalBankNameException;
+
+	/**
+	 * Returns a list of the banks owners. Some plugins might only allow one
+	 * owner at all times. In that case the list will only return one owner.
+	 * 
+	 * @return A list with the owners
+	 * @throws NotSuportedException
+	 *             If the underlying plugin doesn't suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
+	 */
+	public List<String> getBankOwners() throws NotSuportedException,
+			IllegalBankNameException;
 
 	/**
 	 * Gets the list of banks
@@ -440,5 +508,15 @@ public interface IEconomy {
 	 * @since 1.0.0
 	 */
 	public String getName();
+
+	/**
+	 * Returns a economydescription object containing the the underlying plugins
+	 * capabilities.
+	 * 
+	 * @return A EconomyDescription object
+	 * @since 1.0.0
+	 * @see EconomyDescription
+	 */
+	public EconomyDescription getEconomyDescription();
 
 }

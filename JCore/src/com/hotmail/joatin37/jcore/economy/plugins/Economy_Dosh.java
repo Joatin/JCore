@@ -37,7 +37,9 @@ import java.util.List;
 
 import com.hotmail.joatin37.jcore.InsufficientPrivilegeException;
 import com.hotmail.joatin37.jcore.NotSuportedException;
+import com.hotmail.joatin37.jcore.economy.EconomyDescription;
 import com.hotmail.joatin37.jcore.economy.IEconomy;
+import com.hotmail.joatin37.jcore.economy.IllegalBankNameException;
 import com.hotmail.joatin37.jcore.economy.InsufficientMoneyException;
 
 public class Economy_Dosh implements IEconomy {
@@ -124,70 +126,97 @@ public class Economy_Dosh implements IEconomy {
 	}
 
 	@Override
-	public double bankBalance(String bank) throws NotSuportedException {
+	public double bankBalance(String bank) throws NotSuportedException,
+			IllegalBankNameException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public boolean bankHas(String bank, double amount)
-			throws NotSuportedException {
+			throws NotSuportedException, IllegalBankNameException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public double bankWithdraw(String bank, double amount)
-			throws InsufficientMoneyException, NotSuportedException {
+			throws InsufficientMoneyException, NotSuportedException,
+			IllegalBankNameException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public double bankDeposit(String bank, double amount)
-			throws NotSuportedException {
+			throws NotSuportedException, IllegalBankNameException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public double setBankAmount(String bank, double amount)
-			throws InsufficientMoneyException, NotSuportedException {
+			throws InsufficientMoneyException, NotSuportedException,
+			IllegalBankNameException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public boolean isBankOwner(String bank, String playerName)
-			throws NotSuportedException {
+			throws NotSuportedException, IllegalBankNameException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean isBankMember(String name, String playerName)
-			throws NotSuportedException {
+			throws NotSuportedException, IllegalBankNameException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void addBankMember(String bank, String playerName)
-			throws InsufficientPrivilegeException, NotSuportedException {
+			throws InsufficientPrivilegeException, NotSuportedException,
+			IllegalBankNameException {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void removeBankMember(String bank, String playerName)
-			throws InsufficientPrivilegeException, NotSuportedException {
+			throws InsufficientPrivilegeException, NotSuportedException,
+			IllegalBankNameException {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public String changeBankOwner(String bank, String playerName)
-			throws InsufficientPrivilegeException, NotSuportedException {
+	public void addBankOwner(String bank, String playerName)
+			throws InsufficientPrivilegeException, NotSuportedException,
+			IllegalBankNameException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void removeBankOwner(String bank, String playerName)
+			throws NotSuportedException, IllegalBankNameException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<String> getBankMembers(String bank)
+			throws NotSuportedException, IllegalBankNameException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getBankOwners() throws NotSuportedException,
+			IllegalBankNameException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -207,6 +236,12 @@ public class Economy_Dosh implements IEconomy {
 
 	@Override
 	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EconomyDescription getEconomyDescription() {
 		// TODO Auto-generated method stub
 		return null;
 	}
