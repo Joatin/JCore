@@ -39,7 +39,13 @@ import com.hotmail.joatin37.jcore.InsufficientPrivilegeException;
 import com.hotmail.joatin37.jcore.NotSuportedException;
 
 /**
- * A interface used for handling money.
+ * A interface used for handling money. All underlying implementations should be
+ * thread 100% thread safe. However if you are using a thread other than the
+ * main thread you thread will be forced to wait at maximum one gametick, so
+ * repetadly using this in another thread wont be very efficient, it's better
+ * you use the main thread that has no delay at all. Another thread could be
+ * used for just accessing a single method, or if its okay that the thread runs
+ * very slow.
  * 
  * @author Joatin
  * 
@@ -123,7 +129,7 @@ public interface IEconomy {
 
 	/**
 	 * Checks if the player account has the amount, a negative amount will
-	 * always return false.
+	 * always return a exception.
 	 * 
 	 * @param playerName
 	 *            The name of the player to check
@@ -207,6 +213,8 @@ public interface IEconomy {
 	 * @throws InsufficientPrivilegeException
 	 *             if the player doesn't have the privilege to have a bank. This
 	 *             is only thrown on by certain plugins.
+	 * @throws IllegalBankNameException
+	 *             If the name does already exists
 	 * @throws NotSuportedException
 	 *             if the underlying plugin does not suport this operation
 	 * @throws NullPointerException
@@ -214,7 +222,8 @@ public interface IEconomy {
 	 * @since 1.0.0
 	 */
 	public double createBank(String bank, String player)
-			throws InsufficientPrivilegeException, NotSuportedException;
+			throws InsufficientPrivilegeException, NotSuportedException,
+			IllegalBankNameException;
 
 	/**
 	 * Deletes a bank account with the specified name. The bank doesn't have to

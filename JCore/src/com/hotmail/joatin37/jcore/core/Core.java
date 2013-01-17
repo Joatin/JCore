@@ -40,10 +40,14 @@ import java.util.HashMap;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.hotmail.joatin37.jcore.economy.Economy;
 import com.hotmail.joatin37.jcore.economy.IEconomy;
 import com.hotmail.joatin37.jcore.economy.plugins.Economy_3co;
 import com.hotmail.joatin37.jcore.economy.plugins.Economy_AEco;
@@ -75,11 +79,11 @@ import com.hotmail.joatin37.jcore.language.Lang;
 import com.hotmail.joatin37.jcore.language.Lang.Tag;
 import com.hotmail.joatin37.jcore.metrics.GraphCollector;
 import com.hotmail.joatin37.jcore.sql.SQLManager;
-import com.hotmail.joatin37.jcore.util.Lock;
+import com.hotmail.joatin37.jcore.util.myLock;
 import com.hotmail.joatin37.jcore.website.WebPage;
 import com.hotmail.joatin37.jcore.website.WebSite;
 
-public final class Core extends JavaPlugin implements ICore, Listener {
+public final class Core extends JavaPlugin implements ICore, Listener, Runnable {
 
 	private final HashMap<String, LandHandler> landHandlers;
 	private final HashMap<String, WebPage> webpages;
@@ -96,7 +100,11 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 	private boolean usingCustomLang;
 	private Tag defaultLanguage = Tag.enUS;
 	private IEconomy econ;
-	private Lock lock;
+	public static final myLock lock = new myLock(true);
+	public static String MASTERTHREAD;
+	private Economy eco;
+	private PlayerCommandHandler playercommand;
+	private ServerCommandHandler servercommand;
 
 	public Core() {
 		DEBUGG = true;
@@ -154,7 +162,9 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 
 	@Override
 	public void onLoad() {
-		this.lock = new Lock(this);
+		this.playercommand = new PlayerCommandHandler(this);
+		this.servercommand = new ServerCommandHandler(this);
+		MASTERTHREAD = Thread.currentThread().getName();
 		Core.core = this;
 		this.lang = new Lang(this);
 		if (this.getConfig().getBoolean("sql.enable", false)) {
@@ -167,11 +177,17 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 		} else {
 			Core.sendDebug("Didn't create the sql instance");
 		}
+
 	}
 
 	public static void sendDebug(String message) {
-		if (Core.core != null && Core.isDebugg()) {
-			core.getLogger().info("[DEBUG] " + message);
+		Core.lock.lock();
+		try {
+			if (Core.core != null && Core.isDebugg()) {
+				core.getLogger().info("[DEBUG] " + message);
+			}
+		} finally {
+			Core.lock.unlock();
 		}
 	}
 
@@ -199,7 +215,7 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 								+ " ============================================================================== ");
 
 		// End of intro
-		this.getLogger().info(Thread.currentThread().getName());
+		this.getServer().getScheduler().runTaskTimer(this, this, 1, 1);
 		this.saveDefaultConfig();
 		this.manager.onInit();
 		if (this.getConfig().getBoolean("website.enabled", false)) {
@@ -207,7 +223,8 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 		}
 		this.metrics = new GraphCollector(this);
 		Core.sendDebug(Lang.getConsoleMessageSentence(this, "AA"));
-		// this.loadEconomy();
+		this.loadEconomy();
+		this.eco = new Economy(this);
 	}
 
 	@Override
@@ -243,17 +260,15 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 		try {
 			if (existsPlugin(packages)) {
 				if (this.econ == null) {
+					Lang.sendConsoleInfoMessage(this, "AD", name);
 					this.econ = hookClass.getConstructor(Core.class)
 							.newInstance(this);
-					Lang.getConsoleMessageSentence(this, "AD").replace(
-							"[name]", name);
 				} else {
-					Lang.getConsoleMessageSentence(this, "AE").replace(
-							"[name]", name);
+					Lang.sendConsoleInfoMessage(this, "AE", name);
 				}
 			}
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
 
@@ -330,6 +345,34 @@ public final class Core extends JavaPlugin implements ICore, Listener {
 
 		this.hookEconomy("XPBank", Economy_XPBank.class,
 				"com.gmail.mirelatrue.xpbank.XPBank");
+	}
+
+	@Override
+	public void run() {
+		try {
+			Core.lock.masterUnlock();
+		} catch (Exception e) {
+
+		} finally {
+			Core.lock.masterLock();
+		}
+
+	}
+
+	public IEconomy getEconomy() {
+		return this.econ;
+	}
+
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label,
+			String[] args) {
+		if (sender instanceof Player) {
+			this.playercommand.onCommand((Player) sender, cmd, label, args);
+		} else {
+			this.servercommand.onCommand(sender, cmd, label, args);
+		}
+		return true;
+
 	}
 
 }

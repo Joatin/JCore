@@ -12,7 +12,7 @@ latin: true
 
 
 #Just a sentence used for debug
-AA: §eLanguage Works! The tag was [tag]
+AA: §eLanguage Works! The tag was [tag], testing ÅÄÖ
 
 #The error if a language tag is missing within a plugin.
 AB: §4The language tag, [tag] inside [plugin] wasn't found!
@@ -21,10 +21,10 @@ AB: §4The language tag, [tag] inside [plugin] wasn't found!
 AC: Couldn't create the SQL connection, perhaps you host name was wrong, or maybe you typed in a wrong username or password.
 
 #Sent when jcore has found a economy plugin
-AD: [name] was found! Waiting...
+AD: [text1] was found! Waiting...
 
 #Sent when more than one economy plugin was found
-AE: Loading [name]... Hey another economy plugin has already been found!
+AE: Loading [text1]... Hey another economy plugin has already been found!
 
 #Sent when hooking into a plugin
 AF: §eSuccesfully hooked into [plugin]!

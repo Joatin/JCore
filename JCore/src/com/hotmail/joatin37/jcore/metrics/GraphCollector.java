@@ -55,6 +55,7 @@ public class GraphCollector {
 				core.getLogger().info("Couldn't create metrics");
 			}
 		}
+		this.CreatePluginUsingLanguageGraph();
 
 	}
 

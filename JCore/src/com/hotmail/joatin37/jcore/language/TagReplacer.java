@@ -46,14 +46,12 @@ public abstract class TagReplacer {
 			Object obj = it.next();
 			if (obj instanceof String) {
 				message = message.replace("[text" + string + "]", (String) obj);
-				it.remove();
 				string++;
 				continue;
 			}
 			if (obj instanceof OfflinePlayer) {
 				message = message.replace("[player]",
 						((OfflinePlayer) obj).getName());
-				it.remove();
 				continue;
 			}
 			if (obj instanceof JavaPlugin) {
@@ -61,12 +59,10 @@ public abstract class TagReplacer {
 						((JavaPlugin) obj).getName());
 				message = message.replace("[version]", ((JavaPlugin) obj)
 						.getDescription().getVersion());
-				it.remove();
 				continue;
 			}
 			if (obj instanceof Block) {
 				this.ParseBlock((Block) obj);
-				it.remove();
 				continue;
 			}
 			if (obj instanceof Entity) {

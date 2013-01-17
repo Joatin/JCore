@@ -252,6 +252,7 @@ public final class Lang {
 			}
 
 		}
+		message = message.trim();
 		TagReplacer rep = replacers.get(plugin.getName());
 		if (rep == null) {
 			return DEFAULTREPLACER.doReplace(message, tag, replacements);
@@ -261,65 +262,130 @@ public final class Lang {
 
 	}
 
+	/**
+	 * Returns a message that has been broken up to better fit into the chat.
+	 * 
+	 * @param plugin
+	 *            The plugin requesting the message
+	 * @param tag
+	 *            The tag of the message
+	 * @param player
+	 *            The player to send to, used for choosing the language
+	 * @param replacements
+	 *            A list of objects that are used for replacing tags in the
+	 *            message
+	 * @return A broken up string
+	 * @throws NullPointerException
+	 *             If plugin, tag or player was null
+	 * @since 1.0.0
+	 */
 	public static String[] getPlayerMessageSentence(JavaPlugin plugin,
 			String tag, String player, Object... replacements) {
-		Tag lang = playerlangs.get(player);
-		if (lang == null) {
-			lang = deflang;
+		if (plugin == null || tag == null || player == null) {
+			throw new NullPointerException();
 		}
-		return ChatPaginator.wordWrap(
-				Lang.getMessage(plugin, tag, lang, false, replacements),
-				LINEWIDTH);
+		Core.lock.lock();
+		try {
+			Tag lang = playerlangs.get(player);
+			if (lang == null) {
+				lang = deflang;
+			}
+			return ChatPaginator.wordWrap(
+					Lang.getMessage(plugin, tag, lang, false, replacements),
+					LINEWIDTH);
+		} finally {
+			Core.lock.unlock();
+		}
 
 	}
 
 	public static String getConsoleMessageSentence(JavaPlugin plugin,
 			String tag, Object... replacements) {
-		return Lang.getMessage(plugin, tag, deflang, true, replacements)
-				.replaceAll("§0", "").replaceAll("§1", "").replaceAll("§2", "")
-				.replaceAll("§3", "").replaceAll("§4", "").replaceAll("§5", "")
-				.replaceAll("§6", "").replaceAll("§7", "").replaceAll("§8", "")
-				.replaceAll("§9", "").replaceAll("§a", "").replaceAll("§b", "")
-				.replaceAll("§c", "").replaceAll("§d", "").replaceAll("§e", "")
-				.replaceAll("§f", "").replaceAll("§k", "").replaceAll("§l", "")
-				.replaceAll("§m", "").replaceAll("§n", "").replaceAll("§o", "")
-				.replaceAll("§r", "");
+		Core.lock.lock();
+		try {
+			return Lang.getMessage(plugin, tag, deflang, true, replacements)
+					.replaceAll("§0", "").replaceAll("§1", "")
+					.replaceAll("§2", "").replaceAll("§3", "")
+					.replaceAll("§4", "").replaceAll("§5", "")
+					.replaceAll("§6", "").replaceAll("§7", "")
+					.replaceAll("§8", "").replaceAll("§9", "")
+					.replaceAll("§a", "").replaceAll("§b", "")
+					.replaceAll("§c", "").replaceAll("§d", "")
+					.replaceAll("§e", "").replaceAll("§f", "")
+					.replaceAll("§k", "").replaceAll("§l", "")
+					.replaceAll("§m", "").replaceAll("§n", "")
+					.replaceAll("§o", "").replaceAll("§r", "");
+		} finally {
+			Core.lock.unlock();
+		}
 
 	}
 
 	public static void sendPlayerMessage(JavaPlugin plugin, String tag,
 			Player player, Object... replacements) {
+
 		player.sendMessage(Lang.getPlayerMessageSentence(plugin, tag,
 				player.getName(), replacements));
+
 	}
 
 	public static void sendConsoleInfoMessage(JavaPlugin plugin, String tag,
 			Object... replacements) {
+
 		plugin.getLogger().info(
 				Lang.getConsoleMessageSentence(plugin, tag, replacements));
+
 	}
 
 	public static void sendConsoleWarningMessage(JavaPlugin plugin, String tag,
 			Object... replacements) {
+
 		plugin.getLogger().warning(
 				Lang.getConsoleMessageSentence(plugin, tag, replacements));
+
 	}
 
 	public static void sendConsoleSevereMessage(JavaPlugin plugin, String tag,
 			Object... replacements) {
+
 		plugin.getLogger().severe(
 				Lang.getConsoleMessageSentence(plugin, tag, replacements));
+
 	}
 
 	public static List<String> getPluginsUsing() {
-		return new Vector<String>(langfiles.keySet());
+		Core.lock.lock();
+		try {
+			return new Vector<String>(langfiles.keySet());
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
+	/**
+	 * Returns the language tag used for that player. If the player doesnt have
+	 * specified its own it will return the default tag.
+	 * 
+	 * @param player
+	 *            The player to request the tag for.
+	 * @return The tag used for that player
+	 * @throws NullPointerException
+	 *             If player was null
+	 * @since 1.0.0
+	 */
 	public static Tag getPlayerLanguage(String player) {
-		if (playerlangs.get(player) != null) {
-			return playerlangs.get(player);
-		} else {
-			return deflang;
+		if (player == null) {
+			throw new NullPointerException();
+		}
+		Core.lock.lock();
+		try {
+			if (playerlangs.get(player) != null) {
+				return playerlangs.get(player);
+			} else {
+				return deflang;
+			}
+		} finally {
+			Core.lock.unlock();
 		}
 	}
 

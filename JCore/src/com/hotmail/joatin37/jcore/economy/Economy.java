@@ -33,7 +33,569 @@
 
 package com.hotmail.joatin37.jcore.economy;
 
+import java.util.List;
 
+import com.hotmail.joatin37.jcore.InsufficientPrivilegeException;
+import com.hotmail.joatin37.jcore.NotSuportedException;
+import com.hotmail.joatin37.jcore.core.Core;
+
+/**
+ * This is a class used for staticly accessing the money. If you use this before
+ * all plugins has been loaded the method might do noting. All underlying
+ * implementations should be thread 100% thread safe. However if you are using a
+ * thread other than the main thread you thread will be forced to wait at
+ * maximum one gametick, so repetadly using this in another thread wont be very
+ * efficient, it's better you use the main thread that has no delay at all.
+ * Another thread could be used for just accessing a single method, or if its
+ * okay that the thread runs
+ * 
+ * @author Joatin
+ * 
+ * @since 1.0.0
+ * 
+ */
 public final class Economy {
+
+	private static Core core;
+
+	public Economy(Core core) {
+		if (Economy.core == null) {
+			Economy.core = core;
+		}
+	}
+
+	/**
+	 * Returns false if the underlying plugin doesn't suport banks
+	 * 
+	 * @return true if the underlying plugin supports banks
+	 * @since 1.0.0
+	 */
+	public static boolean hasBankSupport() {
+		return core.getEconomy().hasBankSupport();
+	}
+
+	/**
+	 * Some economy plugins round off after a certain number of digits. This
+	 * function returns the number of digits the plugin keeps or -1 if no
+	 * rounding occurs.
+	 * 
+	 * @return number of digits after the decimal point kept
+	 * @since 1.0.0
+	 */
+	public int fractionalDigits() {
+		return core.getEconomy().fractionalDigits();
+	}
+
+	/**
+	 * Format amount into a human readable String This provides translation into
+	 * economy specific formatting to improve consistency between plugins.
+	 * 
+	 * @param amount
+	 * @return Human readable string describing amount
+	 * @since 1.0.0
+	 */
+	public String format(double amount) {
+		return core.getEconomy().format(amount);
+	}
+
+	/**
+	 * Returns the name of the currency in plural form. If the economy being
+	 * used does not support currency names then an empty string will be
+	 * returned.
+	 * 
+	 * @return name of the currency (plural)
+	 * @since 1.0.0
+	 */
+	public String currencyNamePlural() {
+		return core.getEconomy().currencyNamePlural();
+	}
+
+	/**
+	 * Returns the name of the currency in singular form. If the economy being
+	 * used does not support currency names then an empty string will be
+	 * returned.
+	 * 
+	 * @return name of the currency (singular)
+	 * @since 1.0.0
+	 */
+	public String currencyNameSingular() {
+		return core.getEconomy().currencyNameSingular();
+	}
+
+	/**
+	 * Checks if this player has an account on the server yet This will always
+	 * return true if the player has joined the server at least once as all
+	 * major economy plugins auto-generate a player account when the player
+	 * joins the server
+	 * 
+	 * @param playerName
+	 * @return if the player has an account
+	 * @throws NullPointerException
+	 *             if the playerName was null
+	 * @since 1.0.0
+	 */
+	public boolean hasAccount(String playerName) {
+		return core.getEconomy().hasAccount(playerName);
+	}
+
+	/**
+	 * Gets balance of a player
+	 * 
+	 * @param playerName
+	 * @return Amount currently held in players account
+	 * @throws NullPointerException
+	 *             if the playerName was null
+	 * @since 1.0.0
+	 */
+	public double getBalance(String playerName) {
+		return core.getEconomy().getBalance(playerName);
+	}
+
+	/**
+	 * Checks if the player account has the amount, a negative amount will
+	 * always return a exception.
+	 * 
+	 * @param playerName
+	 *            The name of the player to check
+	 * @param amount
+	 *            The amount of money to check if the player has. This should be
+	 *            a positive number, you can't obviously check if he has a
+	 *            negative.
+	 * @return True if the player has the amount specified
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the amount was negative
+	 * @throws NullPointerException
+	 *             if the playerName was null
+	 * @since 1.0.0
+	 */
+	public boolean has(String playerName, double amount) {
+		return core.getEconomy().has(playerName, amount);
+	}
+
+	/**
+	 * Withdraw an amount from a player. Can not be negative.
+	 * 
+	 * @param playerName
+	 *            Name of player
+	 * @param amount
+	 *            Amount to withdraw
+	 * @return The amount the player has left after the transaction.
+	 * @throws InsufficientMoneyException
+	 *             if the player has not enough money
+	 * @throws IllegalArgumentException
+	 *             if the amount was negative
+	 * @throws NullPointerException
+	 *             if the playerName was null
+	 * @since 1.0.0
+	 * @see InsufficientMoneyException
+	 */
+	public double withdrawPlayer(String playerName, double amount)
+			throws InsufficientMoneyException {
+		return core.getEconomy().withdrawPlayer(playerName, amount);
+	}
+
+	/**
+	 * Deposit an amount to a player, throws a exception if the number is
+	 * negative.
+	 * 
+	 * @param playerName
+	 *            Name of player
+	 * @param amount
+	 *            Amount to deposit
+	 * @return The amount the player has left after the transaction.
+	 * @throws IllegalArgumentException
+	 *             if the amount was negative
+	 * @throws NullPointerException
+	 *             if the playerName was null
+	 * @since 1.0.0
+	 */
+	public double depositPlayer(String playerName, double amount) {
+		return core.getEconomy().depositPlayer(playerName, amount);
+	}
+
+	/**
+	 * Numbers in this method can be both positive and negative. Positive
+	 * numbers adds more money to the players account while a negative removes
+	 * money.
+	 * 
+	 * @param playerName
+	 *            The name of the player to add/remove money from
+	 * @param amount
+	 *            amount of money to withdraw/deposit
+	 * @return The amount the player has left after the transaction.
+	 * @throws InsufficientMoneyException
+	 *             if the player doesn't have enough money
+	 * @since 1.0.0
+	 * @see InsufficientMoneyException
+	 */
+	public double setPlayerAmount(String playerName, double amount)
+			throws InsufficientMoneyException {
+		return core.getEconomy().setPlayerAmount(playerName, amount);
+	}
+
+	/**
+	 * Creates a bank account with the specified name and the player as the
+	 * owner
+	 * 
+	 * @param bank
+	 * @param player
+	 * @return The amount the bank has after it's construction.
+	 * 
+	 * @throws InsufficientPrivilegeException
+	 *             if the player doesn't have the privilege to have a bank. This
+	 *             is only thrown on by certain plugins.
+	 * @throws IllegalBankNameException
+	 *             If the name does already exists
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws NullPointerException
+	 *             if either of the parameters was null
+	 * @since 1.0.0
+	 */
+	public double createBank(String bank, String player)
+			throws InsufficientPrivilegeException, NotSuportedException,
+			IllegalBankNameException {
+		return core.getEconomy().createBank(bank, player);
+	}
+
+	/**
+	 * Deletes a bank account with the specified name. The bank doesn't have to
+	 * exist.
+	 * 
+	 * @param bank
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws NullPointerException
+	 *             if the parameter bank was null
+	 * @since 1.0.0
+	 */
+	public void deleteBank(String bank) throws NotSuportedException {
+		core.getEconomy().deleteBank(bank);
+	}
+
+	/**
+	 * Returns the amount the bank has
+	 * 
+	 * @param bank
+	 * @return The banks current amount
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
+	 * @throws NullPointerException
+	 *             if the parameter bank was null
+	 * @since 1.0.0
+	 */
+	public double bankBalance(String bank) throws NotSuportedException,
+			IllegalBankNameException {
+		return core.getEconomy().bankBalance(bank);
+	}
+
+	/**
+	 * Returns true or false whether the bank has the amount specified, will
+	 * throw an error if negative.
+	 * 
+	 * @param bank
+	 * @param amount
+	 * @return True if the bank has the specified amount
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
+	 * @throws NullPointerException
+	 *             if the parameter bank was null
+	 * @since 1.0.0
+	 */
+	public boolean bankHas(String bank, double amount)
+			throws NotSuportedException, IllegalBankNameException {
+		return core.getEconomy().bankHas(bank, amount);
+	}
+
+	/**
+	 * Withdraw an amount from a bank account, can not negative.
+	 * 
+	 * @param bank
+	 * @param amount
+	 * @return The amount the bank has left after the transaction.
+	 * @throws InsufficientMoneyException
+	 *             if the player doesn't have enough money
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
+	 * @throws IllegalArgumentException
+	 *             if the amount is less than 0
+	 * @throws NullPointerException
+	 *             if the parameter bank was null
+	 * @since 1.0.0
+	 * @see InsufficientMoneyException
+	 */
+	public double bankWithdraw(String bank, double amount)
+			throws InsufficientMoneyException, NotSuportedException,
+			IllegalBankNameException {
+		return core.getEconomy().bankWithdraw(bank, amount);
+	}
+
+	/**
+	 * Deposit an amount into a bank account. Can not be negative.
+	 * 
+	 * @param bank
+	 * @param amount
+	 * @return The amount the bank has left after the transaction.
+	 * 
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
+	 * @throws IllegalArgumentException
+	 *             if the amount is less than 0
+	 * @throws NullPointerException
+	 *             if the parameter bank was null
+	 * @since 1.0.0
+	 */
+	public double bankDeposit(String bank, double amount)
+			throws NotSuportedException, IllegalBankNameException {
+		return core.getEconomy().bankDeposit(bank, amount);
+	}
+
+	/**
+	 * Adds or removes a the amount specified. The amount can be either positive
+	 * or negative. A negative amount will remove money while a positiv will
+	 * add.
+	 * 
+	 * @param bank
+	 *            The bank to add/remove money from
+	 * @param amount
+	 *            The amont to remove/add
+	 * @return The amount the bank has left after the transaction.
+	 * @throws InsufficientMoneyException
+	 *             if the player doesn't have enough money
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
+	 * @throws IllegalArgumentException
+	 *             if the amount is less than 0
+	 * @throws NullPointerException
+	 *             if the parameter bank was null
+	 * @since 1.0.0
+	 * @see InsufficientMoneyException
+	 */
+	public double setBankAmount(String bank, double amount)
+			throws InsufficientMoneyException, NotSuportedException,
+			IllegalBankNameException {
+		return core.getEconomy().setBankAmount(bank, amount);
+	}
+
+	/**
+	 * Check if a player is the owner of a bank account
+	 * 
+	 * @param bank
+	 * @param playerName
+	 * @return True if he is
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
+	 * @throws NullPointerException
+	 *             if any of the parameters is null
+	 * @since 1.0.0
+	 */
+	public boolean isBankOwner(String bank, String playerName)
+			throws NotSuportedException, IllegalBankNameException {
+		return core.getEconomy().isBankOwner(bank, playerName);
+	}
+
+	/**
+	 * Check if the player is a member of the bank account
+	 * 
+	 * @param name
+	 * @param playerName
+	 * @return True if he is the owner
+	 * 
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
+	 * @throws NullPointerException
+	 *             if any of the parameters is null
+	 * @since 1.0.0
+	 */
+	public boolean isBankMember(String name, String playerName)
+			throws NotSuportedException, IllegalBankNameException {
+		return core.getEconomy().isBankMember(name, playerName);
+	}
+
+	/**
+	 * Adds a new member to a bank. Does nothing if the player already is a
+	 * member of the bank.
+	 * 
+	 * @param bank
+	 * @param playerName
+	 * @throws InsufficientPrivilegeException
+	 *             If the player doesn't have enough privileges. Only thrown by
+	 *             certain plugins.
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws NullPointerException
+	 *             if any of the parameters was null
+	 * @since 1.0.0
+	 */
+	public void addBankMember(String bank, String playerName)
+			throws InsufficientPrivilegeException, NotSuportedException,
+			IllegalBankNameException {
+		core.getEconomy().addBankMember(bank, playerName);
+	}
+
+	/**
+	 * Removes a player as a member of a bank.
+	 * 
+	 * @param bank
+	 * @param playerName
+	 * 
+	 * @throws InsufficientPrivilegeException
+	 *             If the player doesn't have enough privileges. Only thrown by
+	 *             certain plugins.
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws NullPointerException
+	 *             if any of the parameters was null
+	 * @since 1.0.0
+	 */
+	public void removeBankMember(String bank, String playerName)
+			throws InsufficientPrivilegeException, NotSuportedException,
+			IllegalBankNameException {
+		core.getEconomy().removeBankMember(bank, playerName);
+	}
+
+	/**
+	 * Adds a owner to a bank.
+	 * 
+	 * @param bank
+	 * @param playerName
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws InsufficientPrivilegeException
+	 *             If the new owner doesn't have enough privileges
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
+	 * @throws NullPointerException
+	 *             if any of the parameters was null
+	 * @since 1.0.0
+	 */
+	public void addBankOwner(String bank, String playerName)
+			throws InsufficientPrivilegeException, NotSuportedException,
+			IllegalBankNameException {
+		core.getEconomy().addBankOwner(bank, playerName);
+	}
+
+	/**
+	 * Removes a owner from a bank.
+	 * 
+	 * @param bank
+	 * @param playerName
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
+	 * @throws NullPointerException
+	 *             if any of the parameters was null
+	 * @since 1.0.0
+	 */
+	public void removeBankOwner(String bank, String playerName)
+			throws NotSuportedException, IllegalBankNameException {
+		core.getEconomy().removeBankOwner(bank, playerName);
+	}
+
+	/**
+	 * Returns a list of a banks members, including owners.
+	 * 
+	 * @param bank
+	 * @return A list with the banks members
+	 * @throws NotSuportedException
+	 *             If the method isn't suported by the underlying plugin.
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exist.
+	 */
+	public List<String> getBankMembers(String bank)
+			throws NotSuportedException, IllegalBankNameException {
+		return core.getEconomy().getBankMembers(bank);
+	}
+
+	/**
+	 * Returns a list of the banks owners. Some plugins might only allow one
+	 * owner at all times. In that case the list will only return one owner.
+	 * 
+	 * @return A list with the owners
+	 * @throws NotSuportedException
+	 *             If the underlying plugin doesn't suport this operation
+	 * @throws IllegalBankNameException
+	 *             If the bank doesn't exists.
+	 */
+	public List<String> getBankOwners() throws NotSuportedException,
+			IllegalBankNameException {
+		return core.getEconomy().getBankOwners();
+	}
+
+	/**
+	 * Gets the list of banks
+	 * 
+	 * @return the List of Banks
+	 * 
+	 * 
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @throws NullPointerException
+	 *             if any of the parameters is null
+	 * @since 1.0.0
+	 */
+	public List<String> getBanks() throws NotSuportedException {
+		return core.getEconomy().getBanks();
+	}
+
+	/**
+	 * Attempts to create a player account for the given player
+	 * 
+	 * @throws InsufficientPrivilegeException
+	 *             if the player didn't have enough privileges to have a
+	 *             account. This is only thrown by certain plugins.
+	 * 
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @since 1.0.0
+	 */
+	public void createPlayerAccount(String playerName)
+			throws InsufficientPrivilegeException, NotSuportedException {
+		core.getEconomy().createPlayerAccount(playerName);
+	}
+
+	/**
+	 * Returns the name of the underlying plugn;
+	 * 
+	 * @return Returns the name of the underlying plugn
+	 * @throws NotSuportedException
+	 *             if the underlying plugin does not suport this operation
+	 * @since 1.0.0
+	 */
+	public String getName() {
+		return core.getEconomy().getName();
+	}
+
+	/**
+	 * Returns a economydescription object containing the the underlying plugins
+	 * capabilities.
+	 * 
+	 * @return A EconomyDescription object
+	 * @since 1.0.0
+	 * @see EconomyDescription
+	 */
+	public EconomyDescription getEconomyDescription() {
+		return core.getEconomy().getEconomyDescription();
+	}
 
 }

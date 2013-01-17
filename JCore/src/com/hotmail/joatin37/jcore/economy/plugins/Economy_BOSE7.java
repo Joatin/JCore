@@ -127,22 +127,42 @@ public class Economy_BOSE7 implements IEconomy {
 
 	@Override
 	public int fractionalDigits() {
-		return this.economy.getFractionalDigits();
+		Core.lock.lock();
+		try {
+			return this.economy.getFractionalDigits();
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
 	@Override
 	public String format(double amount) {
-		return this.economy.getMoneyFormatted(amount);
+		Core.lock.lock();
+		try {
+			return this.economy.getMoneyFormatted(amount);
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
 	@Override
 	public String currencyNamePlural() {
-		return this.economy.getMoneyNamePlural();
+		Core.lock.lock();
+		try {
+			return this.economy.getMoneyNamePlural();
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
 	@Override
 	public String currencyNameSingular() {
-		return this.economy.getMoneyName();
+		Core.lock.lock();
+		try {
+			return this.economy.getMoneyName();
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
 	@Override
@@ -150,7 +170,12 @@ public class Economy_BOSE7 implements IEconomy {
 		if (playerName == null) {
 			throw new NullPointerException();
 		}
-		return this.economy.playerRegistered(playerName, false);
+		Core.lock.lock();
+		try {
+			return this.economy.playerRegistered(playerName, false);
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
 	@Override
@@ -159,8 +184,13 @@ public class Economy_BOSE7 implements IEconomy {
 			throw new NullPointerException();
 		}
 		final double balance;
-		balance = this.economy.getPlayerMoneyDouble(playerName);
-		return balance;
+		Core.lock.lock();
+		try {
+			balance = this.economy.getPlayerMoneyDouble(playerName);
+			return balance;
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
 	@Override
@@ -184,8 +214,13 @@ public class Economy_BOSE7 implements IEconomy {
 			throw new InsufficientMoneyException(amount
 					- this.getBalance(playerName), "Player " + playerName, this);
 		}
-		this.economy.setPlayerMoney(playerName, 0d - amount, false);
-		return this.getBalance(playerName);
+		Core.lock.lock();
+		try {
+			this.economy.setPlayerMoney(playerName, 0d - amount, false);
+			return this.getBalance(playerName);
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
 	@Override
@@ -196,8 +231,13 @@ public class Economy_BOSE7 implements IEconomy {
 		if (amount < 0) {
 			throw new IllegalArgumentException();
 		}
-		this.economy.addPlayerMoney(playerName, amount, false);
-		return this.getBalance(playerName);
+		Core.lock.lock();
+		try {
+			this.economy.addPlayerMoney(playerName, amount, false);
+			return this.getBalance(playerName);
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
 	@Override
@@ -206,66 +246,121 @@ public class Economy_BOSE7 implements IEconomy {
 		if (playerName == null) {
 			throw new NullPointerException();
 		}
-		this.economy.setPlayerMoney(playerName, amount, false);
-		return this.getBalance(playerName);
+		Core.lock.lock();
+		try {
+			this.economy.setPlayerMoney(playerName, amount, false);
+			return this.getBalance(playerName);
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
 	@Override
 	public double createBank(String bank, String player)
 			throws InsufficientPrivilegeException, NotSuportedException {
-		// TODO Auto-generated method stub
-		return 0;
+		if (bank == null || player == null) {
+			throw new NullPointerException();
+		}
+		Core.lock.lock();
+		try {
+			if (this.economy.bankExists(bank)) {
+				throw new IllegalBankNameException();
+			}
+			return this.economy.getBankMoneyDouble(bank);
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
 	@Override
 	public void deleteBank(String bank) throws NotSuportedException {
-		// TODO Auto-generated method stub
+		if (bank == null) {
+			throw new NullPointerException();
+		}
+		Core.lock.lock();
+		try {
+			this.economy.removeBank(bank);
+		} finally {
+			Core.lock.unlock();
+		}
 
 	}
 
 	@Override
 	public double bankBalance(String bank) throws NotSuportedException {
-		// TODO Auto-generated method stub
-		return 0;
+		if (bank == null) {
+			throw new NullPointerException();
+		}
+		Core.lock.lock();
+		try {
+			if (!this.economy.bankExists(bank)) {
+				throw new IllegalBankNameException();
+			}
+			return this.economy.getBankMoneyDouble(bank);
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
 	@Override
 	public boolean bankHas(String bank, double amount)
-			throws NotSuportedException {
-		// TODO Auto-generated method stub
-		return false;
+			throws NotSuportedException, IllegalBankNameException {
+		if (bank == null) {
+			throw new NullPointerException();
+		}
+		Core.lock.lock();
+		try {
+			if (!this.economy.bankExists(bank)) {
+				throw new IllegalBankNameException();
+			}
+			return amount <= this.economy.getBankMoneyDouble(bank);
+		} finally {
+			Core.lock.unlock();
+		}
+
 	}
 
 	@Override
 	public double bankWithdraw(String bank, double amount)
-			throws InsufficientMoneyException, NotSuportedException {
+			throws InsufficientMoneyException, NotSuportedException,
+			IllegalBankNameException {
 		if (bank == null) {
 			throw new NullPointerException();
 		}
 		if (amount < 0) {
 			throw new IllegalArgumentException();
 		}
-		if (!this.economy.bankExists(bank)) {
-			throw new IllegalBankNameException();
+		Core.lock.lock();
+		try {
+			if (!this.economy.bankExists(bank)) {
+				throw new IllegalBankNameException();
+			}
+			this.economy.setBankMoney(bank, 0d - amount, true);
+			return this.economy.getBankMoneyDouble(bank);
+		} finally {
+			Core.lock.unlock();
 		}
-		this.economy.setBankMoney(bank, 0d - amount, true);
-		return this.economy.getBankMoneyDouble(bank);
 	}
 
 	@Override
 	public double bankDeposit(String bank, double amount)
-			throws NotSuportedException {
+			throws NotSuportedException, IllegalBankNameException {
 		if (bank == null) {
 			throw new NullPointerException();
 		}
 		if (amount < 0) {
 			throw new IllegalArgumentException();
 		}
-		if (!this.economy.bankExists(bank)) {
-			throw new IllegalBankNameException();
+		Core.lock.lock();
+		try {
+			if (!this.economy.bankExists(bank)) {
+				throw new IllegalBankNameException();
+			}
+			this.economy.addBankMoney(bank, amount, true);
+			return this.economy.getBankMoneyDouble(bank);
+		} finally {
+			Core.lock.unlock();
 		}
-		this.economy.addBankMoney(bank, amount, true);
-		return this.economy.getBankMoneyDouble(bank);
 	}
 
 	@Override
@@ -277,11 +372,16 @@ public class Economy_BOSE7 implements IEconomy {
 		if (amount < 0) {
 			throw new IllegalArgumentException();
 		}
-		if (!this.economy.bankExists(bank)) {
-			throw new IllegalBankNameException();
+		Core.lock.lock();
+		try {
+			if (!this.economy.bankExists(bank)) {
+				throw new IllegalBankNameException();
+			}
+			this.economy.setBankMoney(bank, amount, true);
+			return this.economy.getBankMoneyDouble(bank);
+		} finally {
+			Core.lock.unlock();
 		}
-		this.economy.setBankMoney(bank, amount, true);
-		return this.economy.getBankMoneyDouble(bank);
 	}
 
 	@Override
@@ -290,11 +390,16 @@ public class Economy_BOSE7 implements IEconomy {
 		if (bank == null || playerName == null) {
 			throw new NullPointerException();
 		}
-		if (!this.economy.bankExists(bank)) {
-			throw new IllegalBankNameException();
-		}
+		Core.lock.lock();
+		try {
+			if (!this.economy.bankExists(bank)) {
+				throw new IllegalBankNameException();
+			}
 
-		return this.economy.isBankOwner(bank, playerName);
+			return this.economy.isBankOwner(bank, playerName);
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
 	@Override
@@ -303,10 +408,15 @@ public class Economy_BOSE7 implements IEconomy {
 		if (bank == null || playerName == null) {
 			throw new NullPointerException();
 		}
-		if (!this.economy.bankExists(bank)) {
-			throw new IllegalBankNameException();
+		Core.lock.lock();
+		try {
+			if (!this.economy.bankExists(bank)) {
+				throw new IllegalBankNameException();
+			}
+			return this.economy.isBankMember(bank, playerName);
+		} finally {
+			Core.lock.unlock();
 		}
-		return this.economy.isBankMember(bank, playerName);
 	}
 
 	@Override
@@ -316,10 +426,15 @@ public class Economy_BOSE7 implements IEconomy {
 		if (bank == null || playerName == null) {
 			throw new NullPointerException();
 		}
-		if (!this.economy.bankExists(bank)) {
-			throw new IllegalBankNameException();
+		Core.lock.lock();
+		try {
+			if (!this.economy.bankExists(bank)) {
+				throw new IllegalBankNameException();
+			}
+			this.economy.addBankMember(bank, playerName, true);
+		} finally {
+			Core.lock.unlock();
 		}
-		this.economy.addBankMember(bank, playerName, true);
 	}
 
 	@Override
@@ -328,21 +443,36 @@ public class Economy_BOSE7 implements IEconomy {
 		if (bank == null || playerName == null) {
 			throw new NullPointerException();
 		}
-		if (!this.economy.bankExists(bank)) {
-			throw new IllegalBankNameException();
+		Core.lock.lock();
+		try {
+			if (!this.economy.bankExists(bank)) {
+				throw new IllegalBankNameException();
+			}
+			this.economy.removeBankPlayer(bank, playerName);
+		} finally {
+			Core.lock.unlock();
 		}
-		this.economy.removeBankPlayer(bank, playerName);
 	}
 
 	@Override
 	public List<String> getBanks() throws NotSuportedException {
-		return this.economy.getBankList();
+		Core.lock.lock();
+		try {
+			return this.economy.getBankList();
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
 	@Override
 	public void createPlayerAccount(String playerName)
 			throws InsufficientPrivilegeException, NotSuportedException {
-		this.economy.registerPlayer(playerName);
+		Core.lock.lock();
+		try {
+			this.economy.registerPlayer(playerName);
+		} finally {
+			Core.lock.unlock();
+		}
 
 	}
 
@@ -353,10 +483,15 @@ public class Economy_BOSE7 implements IEconomy {
 		if (bank == null || playerName == null) {
 			throw new NullPointerException();
 		}
-		if (!this.economy.bankExists(bank)) {
-			throw new IllegalBankNameException();
+		Core.lock.lock();
+		try {
+			if (!this.economy.bankExists(bank)) {
+				throw new IllegalBankNameException();
+			}
+			this.economy.addBankOwner(bank, playerName, true);
+		} finally {
+			Core.lock.unlock();
 		}
-		this.economy.addBankOwner(bank, playerName, true);
 
 	}
 
@@ -366,10 +501,15 @@ public class Economy_BOSE7 implements IEconomy {
 		if (bank == null || playerName == null) {
 			throw new NullPointerException();
 		}
-		if (!this.economy.bankExists(bank)) {
-			throw new IllegalBankNameException();
+		Core.lock.lock();
+		try {
+			if (!this.economy.bankExists(bank)) {
+				throw new IllegalBankNameException();
+			}
+			this.economy.removeBankPlayer(bank, playerName);
+		} finally {
+			Core.lock.unlock();
 		}
-		this.economy.removeBankPlayer(bank, playerName);
 
 	}
 
@@ -387,8 +527,13 @@ public class Economy_BOSE7 implements IEconomy {
 
 	@Override
 	public EconomyDescription getEconomyDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		Core.lock.lock();
+		try {
+			// TODO Auto-generated method stub
+			return null;
+		} finally {
+			Core.lock.unlock();
+		}
 	}
 
 }
