@@ -33,137 +33,142 @@
 
 package com.hotmail.joatin37.jcore.website;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
+import java.security.KeyStore;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocketFactory;
+
+import com.hotmail.joatin37.jcore.core.Core;
+import com.hotmail.joatin37.jcore.language.Lang;
 
 public class ConnectionHandler extends Thread {
+	private Core core;
+	private final String ksName = "keystore.jks";
+	private boolean enabled = false;
+	private WebPageManager manager;
+	private ExecutorService pool;
+	private ServerSocket server;
+	private final int port;
+	private final int backlog;
 
-	private final Socket socket;
-	private final WebPageManager manager;
-
-	// Variables
-	private String request;
-	private String resource;
-	private String httpversion;
-	private String host;
-	private String preferedlang;
-	private String connectiontype;
-	private final HashMap<String, String> cookies;
-	private boolean DNT = false;
-
-	public ConnectionHandler(Socket socket, WebPageManager manager) {
-		this.socket = socket;
-		this.manager = manager;
-		this.cookies = new HashMap<String, String>();
-		this.start();
+	public ConnectionHandler(Core core) {
+		this.core = core;
+		this.pool = Executors.newFixedThreadPool(core.getConfig().getInt(
+				"website.maximum", 100));
+		this.port = core.getConfig().getInt("website.port", 80);
+		this.backlog = core.getConfig().getInt("website.backlog", 100);
+		if (core.getConfig().getBoolean("website.enabled", false)) {
+			this.enabled = true;
+			this.manager = new WebPageManager(core);
+			if (core.getConfig().getBoolean("website.https", false)) {
+				this.SSLConection();
+			} else {
+				this.OpenConnection();
+			}
+			this.setName("Website Thread");
+			this.setDaemon(true);
+			this.start();
+		}
 	}
 
 	@Override
 	public void run() {
-		try {
-			BufferedReader input = new BufferedReader(new InputStreamReader(
-					this.socket.getInputStream()));
-			BufferedOutputStream output = new BufferedOutputStream(
-					this.socket.getOutputStream());
-			this.handle(input, output);
-
-			output.write("Hello world!!!".getBytes());
-			output.flush();
-			this.socket.close();
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		while (true) {
+			try {
+				this.pool.execute(new Handler(this.server.accept()));
+			} catch (IOException e) {
+			}
 		}
 	}
 
-	private void handle(BufferedReader input, BufferedOutputStream output) {
-		try {
-			String req;
-			req = input.readLine();
-			String[] s2 = req.split(" ");
-			if (s2[0].equalsIgnoreCase("GET") || s2[0].equalsIgnoreCase("HEAD")) {
-				this.request = s2[0];
-				this.resource = s2[1].replace("/", "");
-				this.httpversion = s2[2];
-			} else {
-				this.onUnknownRequest(input, output);
-				return;
-			}
+	public boolean isEnabled() {
+		return this.enabled;
+	}
 
-			String[] s;
-			String s5;
-			while ((s5 = input.readLine()) != null) {
-				s = s5.split(" ");
-				if (s[0].toUpperCase().startsWith(
-						"Accept-Language".toUpperCase())) {
-					this.preferedlang = s[1].split(",")[0];
+	private void SSLConection() {
+		char ksPass[] = "password".toCharArray();
+		char ctPass[] = "tintin37".toCharArray();
+		try {
+			KeyStore ks = KeyStore.getInstance("JKS");
+			ks.load(this.core.getResource(this.ksName), ksPass);
+			KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+			kmf.init(ks, ctPass);
+			SSLContext sc = SSLContext.getInstance("TLS");
+			sc.init(kmf.getKeyManagers(), null, null);
+			SSLServerSocketFactory ssf = sc.getServerSocketFactory();
+			this.server = ssf.createServerSocket(this.port, this.backlog);
+			System.out.println("Server started:");
+		} catch (Exception e) {
+		}
+	}
+
+	private void OpenConnection() {
+		try {
+			this.server = new ServerSocket(this.port, this.backlog);
+		} catch (IOException e) {
+			Lang.sendConsoleSevereMessage(this.core, "AG");
+		}
+	}
+
+	protected class Handler implements Runnable {
+
+		private final Socket socket;
+		private String request;
+		private String resource;
+		private String language;
+		private String username;
+		private String password;
+
+		protected Handler(Socket socket) {
+			this.socket = socket;
+		}
+
+		@Override
+		public void run() {
+			try {
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(this.socket.getInputStream()));
+				String s = reader.readLine();
+				if (s.startsWith("GET")) {
+					String resource = s.split(" ")[1];
 				}
-				if (s[0].toUpperCase().startsWith("Connection".toUpperCase())) {
-					this.connectiontype = s[1];
+
+			} catch (IOException e) {
+			} finally {
+				try {
+					this.socket.close();
+				} catch (IOException e) {
 				}
-				if (s[0].toUpperCase().startsWith("Cookie".toUpperCase())) {
-					for (int i = 1; i < s.length; i++) {
-						String[] split = s[i].split("=");
-						this.cookies.put(split[0], split[1].replace(";", ""));
+			}
+		}
+
+		private void loadValues(BufferedReader reader) throws IOException {
+			String s;
+			while ((s = reader.readLine()) != null) {
+				if (s.toUpperCase().startsWith("GET")) {
+					this.request = "GET";
+					this.resource = s.split(" ")[1];
+				}
+				if (s.toUpperCase().startsWith("ACCEPT-LANGUAGE")) {
+					this.language = s.split(" ")[1].split(",")[0];
+					Core.sendDebug("Accepted language: " + this.language);
+				}
+				if (s.toUpperCase().startsWith("COOKIE")) {
+					String[] splits = s.split(" ");
+					for (int i = 1; i < splits.length; i++) {
+
 					}
 				}
-				if (s[0].toUpperCase().startsWith("Host".toUpperCase())) {
-					this.host = s[1];
-				}
-				if (s[0].toUpperCase().startsWith("DNT".toUpperCase())) {
-					if (Integer.parseInt(s[1]) == 1) {
-						this.DNT = true;
-					}
-				}
 			}
-			if (this.request.equalsIgnoreCase("GET")) {
-				this.handleGet(input, output);
-			}
-			if (this.request.equalsIgnoreCase("HEAD")) {
-				this.handleHead(input, output);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 	}
-
-	private void handleGet(BufferedReader input, BufferedOutputStream output) {
-		if (this.resource.equalsIgnoreCase("StyleSheet.css")) {
-			this.returnPage(input, output, true);
-			return;
-		}
-		if (this.cookies.get("UserID") != null
-				&& this.cookies.get("Password") != null) {
-			String s1 = this.cookies.get("UserID");
-			String s2 = this.cookies.get("Password");
-		}
-	}
-
-	private void returnLogin(BufferedReader input, BufferedOutputStream output) {
-
-	}
-
-	private void returnPage(BufferedReader input, BufferedOutputStream output,
-			boolean withContent) {
-
-	}
-
-	private void handleHead(BufferedReader input, BufferedOutputStream output) {
-		if (this.resource.equalsIgnoreCase("StyleSheet.css")) {
-			this.returnPage(input, output, false);
-		}
-	}
-
-	private void onUnknownRequest(BufferedReader input,
-			BufferedOutputStream output) {
-
-	}
-
 }

@@ -33,36 +33,223 @@
 
 package com.hotmail.joatin37.jcore.website;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.net.Socket;
-import java.util.List;
-import java.util.Vector;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.LinkedList;
 
 import com.hotmail.joatin37.jcore.core.Core;
 
-public class WebPageManager implements Runnable {
-
+public class WebPageManager {
 	private final Core core;
-	private final List<ConnectionHandler> connections;
+
+	private byte[] bootstrap_css;
+	private byte[] bootstrap_min_css;
+	private byte[] glyphicons_halflings_white_png;
+	private byte[] glyphicons_halflings_png;
+	private byte[] bootstrap_js;
+	private byte[] bootstrap_min_js;
 
 	public WebPageManager(Core core) {
 		this.core = core;
-		this.connections = new Vector<ConnectionHandler>();
+		this.loadbootstrap_css();
+		this.loadbootstrap_min_css();
+		this.loadglyphicons_halflings_white_png();
+		this.loadglyphicons_halflings_png();
+		this.loadbootstrap_js();
+		this.loadbootstrap_min_js();
 	}
 
-	// Waring Run ASYNC
-	public void handleConnection(Socket socket) {
-		this.connections.add(new ConnectionHandler(socket, this));
+	private void loadbootstrap_css() {
+		InputStream input = this.core
+				.getResource("Bootstrap/css/bootstrap.css");
+		LinkedList<Byte> list = new LinkedList<Byte>();
+		if (input != null) {
+			try {
+				byte[] b = new byte[1];
+				while (input.read(b) != -1) {
+					list.add(b[0]);
+				}
+				Byte[] bytes = list.toArray(new Byte[0]);
+				this.bootstrap_css = new byte[bytes.length];
+				for (int i = 0; i < bytes.length; i++) {
+					this.bootstrap_css[i] = bytes[i];
+				}
+			} catch (Exception e) {
+				Core.sendDebug("Something went wrong while reading Bootstrap/css/bootstrap.css");
+				e.getMessage();
+				e.printStackTrace();
+			} finally {
+				try {
+					input.close();
+				} catch (IOException e) {
+
+				}
+			}
+		} else {
+			Core.sendDebug("Couldn't open a Stream to Bootstrap/css/bootstrap.css");
+		}
 	}
 
-	public void HandleLogin(BufferedReader input, BufferedOutputStream output) {
+	private void loadbootstrap_min_css() {
+		InputStream input = this.core
+				.getResource("Bootstrap/css/bootstrap.min.css");
+		LinkedList<Byte> list = new LinkedList<Byte>();
+		if (input != null) {
+			try {
+				byte[] b = new byte[1];
+				while (input.read(b) != -1) {
+					list.add(b[0]);
+				}
+				Byte[] bytes = list.toArray(new Byte[0]);
+				this.bootstrap_min_css = new byte[bytes.length];
+				for (int i = 0; i < bytes.length; i++) {
+					this.bootstrap_min_css[i] = bytes[i];
+				}
+			} catch (Exception e) {
+				Core.sendDebug("Something went wrong while reading Bootstrap/css/bootstrap.min.css");
+				e.getMessage();
+				e.printStackTrace();
+			} finally {
+				try {
+					input.close();
+				} catch (IOException e) {
 
+				}
+			}
+		} else {
+			Core.sendDebug("Couldn't open a Stream to Bootstrap/css/bootstrap.min.css");
+		}
 	}
 
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
+	private void loadglyphicons_halflings_white_png() {
+		InputStream input = this.core
+				.getResource("Bootstrap/img/glyphicons-halflings-white.png");
+		LinkedList<Byte> list = new LinkedList<Byte>();
+		if (input != null) {
+			try {
+				byte[] b = new byte[1];
+				while (input.read(b) != -1) {
+					list.add(b[0]);
+				}
+				Byte[] bytes = list.toArray(new Byte[0]);
+				this.glyphicons_halflings_white_png = new byte[bytes.length];
+				for (int i = 0; i < bytes.length; i++) {
+					this.glyphicons_halflings_white_png[i] = bytes[i];
+				}
+			} catch (Exception e) {
+				Core.sendDebug("Something went wrong while reading Bootstrap/img/glyphicons-halflings-white.png");
+				e.getMessage();
+				e.printStackTrace();
+			} finally {
+				try {
+					input.close();
+				} catch (IOException e) {
 
+				}
+			}
+		} else {
+			Core.sendDebug("Couldn't open a Stream to Bootstrap/img/glyphicons-halflings-white.png");
+		}
 	}
+
+	private void loadglyphicons_halflings_png() {
+		InputStream input = this.core
+				.getResource("Bootstrap/img/glyphicons-halflings.png");
+		LinkedList<Byte> list = new LinkedList<Byte>();
+		if (input != null) {
+			try {
+				byte[] b = new byte[1];
+				while (input.read(b) != -1) {
+					list.add(b[0]);
+				}
+				Byte[] bytes = list.toArray(new Byte[0]);
+				this.glyphicons_halflings_png = new byte[bytes.length];
+				for (int i = 0; i < bytes.length; i++) {
+					this.glyphicons_halflings_png[i] = bytes[i];
+				}
+			} catch (Exception e) {
+				Core.sendDebug("Something went wrong while reading Bootstrap/img/glyphicons-halflings.png");
+				e.getMessage();
+				e.printStackTrace();
+			} finally {
+				try {
+					input.close();
+				} catch (IOException e) {
+
+				}
+			}
+		} else {
+			Core.sendDebug("Couldn't open a Stream to Bootstrap/img/glyphicons-halflings.png");
+		}
+	}
+
+	private void loadbootstrap_js() {
+		InputStream input = this.core.getResource("Bootstrap/js/bootstrap.js");
+		LinkedList<Byte> list = new LinkedList<Byte>();
+		if (input != null) {
+			try {
+				byte[] b = new byte[1];
+				while (input.read(b) != -1) {
+					list.add(b[0]);
+				}
+				Byte[] bytes = list.toArray(new Byte[0]);
+				this.bootstrap_js = new byte[bytes.length];
+				for (int i = 0; i < bytes.length; i++) {
+					this.bootstrap_js[i] = bytes[i];
+				}
+			} catch (Exception e) {
+				Core.sendDebug("Something went wrong while reading Bootstrap/js/bootstrap.js");
+				e.getMessage();
+				e.printStackTrace();
+			} finally {
+				try {
+					input.close();
+				} catch (IOException e) {
+
+				}
+			}
+		} else {
+			Core.sendDebug("Couldn't open a Stream to Bootstrap/js/bootstrap.js");
+		}
+	}
+
+	private void loadbootstrap_min_js() {
+		InputStream input = this.core
+				.getResource("Bootstrap/js/bootstrap.min.js");
+		LinkedList<Byte> list = new LinkedList<Byte>();
+		if (input != null) {
+			try {
+				byte[] b = new byte[1];
+				while (input.read(b) != -1) {
+					list.add(b[0]);
+				}
+				Byte[] bytes = list.toArray(new Byte[0]);
+				this.bootstrap_min_js = new byte[bytes.length];
+				for (int i = 0; i < bytes.length; i++) {
+					this.bootstrap_min_js[i] = bytes[i];
+				}
+			} catch (Exception e) {
+				Core.sendDebug("Something went wrong while reading Bootstrap/js/bootstrap.min.js");
+				e.getMessage();
+				e.printStackTrace();
+			} finally {
+				try {
+					input.close();
+				} catch (IOException e) {
+
+				}
+			}
+		} else {
+			Core.sendDebug("Couldn't open a Stream to Bootstrap/js/bootstrap.min.js");
+		}
+	}
+
+	public byte[] getResource(String resource, String langtag) {
+		switch (resource) {
+		case "bootstrap.css":
+			return this.bootstrap_css;
+		}
+		return null;
+	}
+
 }

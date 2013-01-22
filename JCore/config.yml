@@ -7,7 +7,9 @@ sql:
 cachesize: 1000
 website:
   enabled: false
+  https: false
   port: 443
+  backlog: 100
 safemode: true
 lang:
   custom: false

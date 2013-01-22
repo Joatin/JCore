@@ -80,8 +80,8 @@ import com.hotmail.joatin37.jcore.language.Lang.Tag;
 import com.hotmail.joatin37.jcore.metrics.GraphCollector;
 import com.hotmail.joatin37.jcore.sql.SQLManager;
 import com.hotmail.joatin37.jcore.util.myLock;
+import com.hotmail.joatin37.jcore.website.ConnectionHandler;
 import com.hotmail.joatin37.jcore.website.WebPage;
-import com.hotmail.joatin37.jcore.website.WebSite;
 
 public final class Core extends JavaPlugin implements ICore, Listener, Runnable {
 
@@ -91,7 +91,7 @@ public final class Core extends JavaPlugin implements ICore, Listener, Runnable 
 	private FileConfiguration config = null;
 	private File configfile = null;
 	private boolean skipsave = false;
-	private WebSite webSite;
+	private ConnectionHandler webSite;
 	private static boolean DEBUGG = false;
 	private GraphCollector metrics;
 	private SQLManager sql;
@@ -218,9 +218,7 @@ public final class Core extends JavaPlugin implements ICore, Listener, Runnable 
 		this.getServer().getScheduler().runTaskTimer(this, this, 1, 1);
 		this.saveDefaultConfig();
 		this.manager.onInit();
-		if (this.getConfig().getBoolean("website.enabled", false)) {
-			this.webSite = new WebSite(this);
-		}
+		this.webSite = new ConnectionHandler(this);
 		this.metrics = new GraphCollector(this);
 		Core.sendDebug(Lang.getConsoleMessageSentence(this, "AA"));
 		this.loadEconomy();

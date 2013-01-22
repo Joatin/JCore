@@ -28,3 +28,6 @@ AE: Loading [text1]... Hey another economy plugin has already been found!
 
 #Sent when hooking into a plugin
 AF: §eSuccesfully hooked into [plugin]!
+
+#Sent when a server creation fails
+AG: §4Website Server Creation Failed

@@ -36,7 +36,6 @@ package com.hotmail.joatin37.jcore.website;
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -70,17 +69,7 @@ public class WebSite implements Runnable {
 
 	@Override
 	public void run() {
-		while (true) {
-			try {
-				Socket csocket = this.socket.accept();
-				this.core.getLogger().info("[WebSite] New connection!!!");
-				this.manager.handleConnection(csocket);
 
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 	}
 
 }
