@@ -244,7 +244,7 @@ public class WebPageManager {
 		}
 	}
 
-	public byte[] getResource(String resource, String langtag) {
+	public synchronized byte[] getResource(String resource, String langtag) {
 		switch (resource) {
 		case "bootstrap.css":
 			return this.bootstrap_css;

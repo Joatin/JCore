@@ -36,6 +36,7 @@ package com.hotmail.joatin37.jcore.website;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyStore;
@@ -136,11 +137,17 @@ public class ConnectionHandler extends Thread {
 			try {
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(this.socket.getInputStream()));
+				OutputStream output = this.socket.getOutputStream();
 				String s = reader.readLine();
-				if (s.startsWith("GET")) {
-					String resource = s.split(" ")[1];
-				}
+				this.loadValues(reader);
+				ConnectionHandler.this.manager.getResource(this.resource,
+						this.language);
+				if (!this.request.equalsIgnoreCase("GET")
+						|| !this.request.equalsIgnoreCase("HEAD")) {
 
+					output.write("HTTP/1.1 405 bad request".getBytes());
+					return;
+				}
 			} catch (IOException e) {
 			} finally {
 				try {
@@ -164,7 +171,9 @@ public class ConnectionHandler extends Thread {
 				if (s.toUpperCase().startsWith("COOKIE")) {
 					String[] splits = s.split(" ");
 					for (int i = 1; i < splits.length; i++) {
-
+						if (splits[i].startsWith(this.username)) {
+							this.username = splits[i].split("=")[1];
+						}
 					}
 				}
 			}
