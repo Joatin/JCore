@@ -76,7 +76,7 @@ import com.hotmail.joatin37.jcore.landmanagement.CollectionManager;
 import com.hotmail.joatin37.jcore.landmanagement.ICollectionManager;
 import com.hotmail.joatin37.jcore.landmanagement.LandHandler;
 import com.hotmail.joatin37.jcore.language.Lang;
-import com.hotmail.joatin37.jcore.language.Lang.Tag;
+import com.hotmail.joatin37.jcore.language.Lang.LangTag;
 import com.hotmail.joatin37.jcore.metrics.GraphCollector;
 import com.hotmail.joatin37.jcore.sql.SQLManager;
 import com.hotmail.joatin37.jcore.util.myLock;
@@ -98,7 +98,7 @@ public final class Core extends JavaPlugin implements ICore, Listener, Runnable 
 	private static Core core;
 	private Lang lang;
 	private boolean usingCustomLang;
-	private Tag defaultLanguage = Tag.enUS;
+	private LangTag defaultLanguage = LangTag.enUS;
 	private IEconomy econ;
 	public static final myLock lock = new myLock(true);
 	public static String MASTERTHREAD;
@@ -121,7 +121,7 @@ public final class Core extends JavaPlugin implements ICore, Listener, Runnable 
 		return this.econ;
 	}
 
-	public Tag defLanguage() {
+	public LangTag defLanguage() {
 		return this.defaultLanguage;
 	}
 

@@ -140,13 +140,15 @@ public class ConnectionHandler extends Thread {
 				OutputStream output = this.socket.getOutputStream();
 				String s = reader.readLine();
 				this.loadValues(reader);
-				ConnectionHandler.this.manager.getResource(this.resource,
-						this.language);
+				byte[] content = ConnectionHandler.this.manager.getResource(
+						this.resource, this.language);
 				if (!this.request.equalsIgnoreCase("GET")
 						|| !this.request.equalsIgnoreCase("HEAD")) {
 
 					output.write("HTTP/1.1 405 bad request".getBytes());
 					return;
+				} else {
+
 				}
 			} catch (IOException e) {
 			} finally {

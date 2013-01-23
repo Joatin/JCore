@@ -35,8 +35,10 @@ package com.hotmail.joatin37.jcore.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Properties;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -46,38 +48,71 @@ import com.hotmail.joatin37.jcore.core.Core;
 public class SQLManager {
 
 	private final Core core;
-	private Connection conn = null;
+	private static Connection conn = null;
+	private final String baseURL;
+	private static HashMap<String, SQL> connections = new HashMap<String, SQL>(
+			5, 1);
+	private static SQLManager manager;
 
 	public SQLManager(Core core) throws SQLException {
 		this.core = core;
-		;
-		if (this.conn == null) {
-
-			String url = this.core.getConfig().getString("sql.url",
-					"mysql://localhost:3306/");
-
+		manager = this;
+		this.baseURL = this.core.getConfig().getString("sql.url",
+				"mysql://localhost:3306/");
+		if (SQLManager.conn == null) {
 			Properties connectionProps = new Properties();
 			connectionProps.put("user",
 					this.core.getConfig().getString("sql.username", "root"));
 			connectionProps.put("password",
 					this.core.getConfig().getString("sql.password", ""));
 
-			this.conn = DriverManager.getConnection("jdbc:" + url,
-					connectionProps);
+			SQLManager.conn = DriverManager.getConnection("jdbc:"
+					+ this.baseURL, connectionProps);
 			this.core.getLogger().info("Connected to database");
 		}
 	}
 
-	public void getSQL(JavaPlugin plugin) {
-		Statement stmt;
+	private void reconnect() {
 		try {
-			stmt = this.conn.createStatement();
-			String sql = "IF EXISTS (SELECT NAME FROM sysdatabases WHERE NAME = 'database_to_check_for') PRINT 'exists' ELSE PRINT 'does not exist'";
-			stmt.executeUpdate(sql);
+			Properties connectionProps = new Properties();
+			connectionProps.put("user",
+					this.core.getConfig().getString("sql.username", "root"));
+			connectionProps.put("password",
+					this.core.getConfig().getString("sql.password", ""));
+			SQLManager.conn = DriverManager.getConnection("jdbc:"
+					+ this.baseURL, connectionProps);
+			this.core.getLogger().info("Connected to database");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
+	}
+
+	public synchronized static SQL getSQL(JavaPlugin plugin) {
+		SQL sql;
+		synchronized (connections) {
+			if ((sql = connections.get(plugin.getName())) != null) {
+				return sql;
+			} else {
+				sql = new SQLBase(plugin.getName(), manager);
+				connections.put(plugin.getName(), sql);
+				return sql;
+			}
+		}
+
+	}
+
+	public synchronized ResultSet executeStatement(String statement)
+			throws SQLException {
+		Statement stmt = null;
+		try {
+			stmt = conn.createStatement();
+		} catch (SQLException e) {
+			this.reconnect();
+		}
+		stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(statement);
+		return rs;
 	}
 }

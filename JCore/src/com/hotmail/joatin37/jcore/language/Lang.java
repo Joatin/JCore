@@ -63,12 +63,12 @@ import com.hotmail.joatin37.jcore.core.Core;
  */
 public final class Lang {
 
-	private static HashMap<String, HashMap<Tag, Language>> langfiles = new HashMap<String, HashMap<Tag, Language>>();
+	private static HashMap<String, HashMap<LangTag, Language>> langfiles = new HashMap<String, HashMap<LangTag, Language>>();
 	private static HashMap<String, JavaPlugin> plugins = new HashMap<String, JavaPlugin>();
 	private static HashMap<String, TagReplacer> replacers = new HashMap<String, TagReplacer>();
 	private static final TagReplacer DEFAULTREPLACER = new DefaultReplacer();
-	private static HashMap<String, Tag> playerlangs = new HashMap<String, Tag>();
-	private static Tag deflang = Tag.enUS;
+	private static HashMap<String, LangTag> playerlangs = new HashMap<String, LangTag>();
+	private static LangTag deflang = LangTag.enUS;
 	private static boolean isCustom = false;
 	private static Core core;
 
@@ -93,7 +93,7 @@ public final class Lang {
 	 * @author Joatin
 	 * @since 1.0.0
 	 */
-	public enum Tag {
+	public enum LangTag {
 		svSE("sv-SE", "Svenska Sverige", "Swedish Sweden"), zhTW("zh-TW",
 				"中國台灣省，中國", "Traditional-Chinese Taiwan Province of China"), enUK(
 				"en-UK", "English United Kingdom", "English United Kingdom"), enUS(
@@ -115,7 +115,7 @@ public final class Lang {
 		private final String langname;
 		private final String langnameenglish;
 
-		private Tag(String tag, String langname, String langnameenglish) {
+		private LangTag(String tag, String langname, String langnameenglish) {
 			this.tag = tag;
 			this.langname = langname;
 			this.langnameenglish = langnameenglish;
@@ -183,8 +183,8 @@ public final class Lang {
 		}
 		Core.sendDebug("Started loading: " + plugin.getName());
 		plugins.put(plugin.getName(), plugin);
-		langfiles.put(plugin.getName(), new HashMap<Tag, Language>());
-		Tag[] tags = Tag.values();
+		langfiles.put(plugin.getName(), new HashMap<LangTag, Language>());
+		LangTag[] tags = LangTag.values();
 		for (int i = 0; i < tags.length; i++) {
 			try {
 				Language lang = new Language(Lang.core, plugin,
@@ -198,7 +198,7 @@ public final class Lang {
 	}
 
 	private static String getMessage(JavaPlugin plugin, String tag,
-			Tag langtag, boolean forceLatin, Object[] replacements) {
+			LangTag langtag, boolean forceLatin, Object[] replacements) {
 		if (plugin == null) {
 			throw new NullPointerException(
 					"JavaPlugin was null! This is caused by a mallfunctioning plugin");
@@ -286,7 +286,7 @@ public final class Lang {
 		}
 		Core.lock.lock();
 		try {
-			Tag lang = playerlangs.get(player);
+			LangTag lang = playerlangs.get(player);
 			if (lang == null) {
 				lang = deflang;
 			}
@@ -373,7 +373,7 @@ public final class Lang {
 	 *             If player was null
 	 * @since 1.0.0
 	 */
-	public static Tag getPlayerLanguage(String player) {
+	public static LangTag getPlayerLanguage(String player) {
 		if (player == null) {
 			throw new NullPointerException();
 		}
