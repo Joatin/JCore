@@ -19,8 +19,9 @@ public class SQLBase implements SQL {
 
 	}
 
+	@Override
 	public void put(String key, String value) {
-
+		this.manager.doPut(this.schema, key, "string", value);
 	}
 
 	public void get(String key) {

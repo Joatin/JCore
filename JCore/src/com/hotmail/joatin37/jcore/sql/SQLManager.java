@@ -35,7 +35,6 @@ package com.hotmail.joatin37.jcore.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -110,28 +109,23 @@ public class SQLManager {
 
 	}
 
-	public synchronized void doPut(String plugin, String key, String datatype,
+	public synchronized void doPut(String schema, String key, String datatype,
 			String value) {
-		String statement = "INSERT INTO \'" + plugin + "\'.\'"
+		try {
+			Statement stmt1 = conn.createStatement();
+			stmt1.executeUpdate("CREATE TABLE IF NOT EXISTS `"
+					+ schema
+					+ "`.`"
+					+ SQLBase.QUICKSTORAGE
+					+ "` (`key` VARCHAR(255) NOT NULL , `type` VARCHAR(32) NULL DEFAULT 'String' , `value` TEXT NULL , PRIMARY KEY (`key`) , UNIQUE INDEX `key_UNIQUE` (`key` ASC));");
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
+		String statement = "INSERT INTO \'" + schema + "\'.\'"
 				+ SQLBase.QUICKSTORAGE + "\' VALUES (" + key + ", " + datatype
 				+ ", " + value + ")";
-		try {
-			this.executeStatement(statement);
-		} catch (SQLException e) {
-			e.getErrorCode();
-		}
+
 	}
 
-	public synchronized ResultSet executeStatement(String statement)
-			throws SQLException {
-		Statement stmt = null;
-		try {
-			stmt = conn.createStatement();
-		} catch (SQLException e) {
-			this.reconnect();
-		}
-		stmt = conn.createStatement();
-		ResultSet rs = stmt.executeQuery(statement);
-		return rs;
-	}
 }
