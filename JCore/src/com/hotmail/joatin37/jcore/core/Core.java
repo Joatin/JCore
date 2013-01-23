@@ -177,6 +177,7 @@ public final class Core extends JavaPlugin implements ICore, Listener, Runnable 
 		} else {
 			Core.sendDebug("Didn't create the sql instance");
 		}
+		SQLManager.getSQL(this);
 
 	}
 

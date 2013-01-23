@@ -95,12 +95,31 @@ public class SQLManager {
 			if ((sql = connections.get(plugin.getName())) != null) {
 				return sql;
 			} else {
+				try {
+					Statement stmt = conn.createStatement();
+					stmt.executeUpdate("CREATE SCHEMA IF NOT EXISTS "
+							+ plugin.getName());
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 				sql = new SQLBase(plugin.getName(), manager);
 				connections.put(plugin.getName(), sql);
 				return sql;
 			}
 		}
 
+	}
+
+	public synchronized void doPut(String plugin, String key, String datatype,
+			String value) {
+		String statement = "INSERT INTO \'" + plugin + "\'.\'"
+				+ SQLBase.QUICKSTORAGE + "\' VALUES (" + key + ", " + datatype
+				+ ", " + value + ")";
+		try {
+			this.executeStatement(statement);
+		} catch (SQLException e) {
+			e.getErrorCode();
+		}
 	}
 
 	public synchronized ResultSet executeStatement(String statement)
