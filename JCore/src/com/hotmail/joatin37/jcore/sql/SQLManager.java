@@ -35,6 +35,7 @@ package com.hotmail.joatin37.jcore.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -52,6 +53,8 @@ public class SQLManager {
 	private static HashMap<String, SQL> connections = new HashMap<String, SQL>(
 			5, 1);
 	private static SQLManager manager;
+	public final static String QUICKSTORAGE = "quickstorage";
+	public final static String GLOBALQUICKSTORAGE = "globalquickstorage";
 
 	public SQLManager(Core core) throws SQLException {
 		this.core = core;
@@ -88,7 +91,7 @@ public class SQLManager {
 
 	}
 
-	public synchronized static SQL getSQL(JavaPlugin plugin) {
+	public synchronized SQL getSQL(JavaPlugin plugin) {
 		SQL sql;
 		synchronized (connections) {
 			if ((sql = connections.get(plugin.getName())) != null) {
@@ -109,6 +112,57 @@ public class SQLManager {
 
 	}
 
+	public synchronized String getString(String schema, String key) {
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt
+					.executeQuery("SELECT * FROM `" + schema + "`.`"
+							+ SQLManager.QUICKSTORAGE + "` WHERE `key`=\'"
+							+ key + "\'");
+			rs.next();
+			return rs.getString("value");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public synchronized Number getNumber(String schema, String key) {
+		ResultSet rs = null;
+		try {
+			Statement stmt = conn.createStatement();
+			rs = stmt
+					.executeQuery("SELECT * FROM `" + schema + "`.`"
+							+ SQLManager.QUICKSTORAGE + "` WHERE `key`=\'"
+							+ key + "\'");
+			rs.next();
+			Core.sendDebug(rs.getString("type"));
+			return this.reconstructNumberFromString(rs.getString("value"),
+					rs.getString("type"));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} finally {
+			try {
+				rs.close();
+			} catch (SQLException e) {
+
+			}
+		}
+	}
+
+	public void remove(String schema, String key) {
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.executeUpdate("DELETE FROM `" + schema + "`.`"
+					+ SQLManager.QUICKSTORAGE + "` WHERE `key`=\'" + key + "\'");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public synchronized void doPut(String schema, String key, String datatype,
 			String value) {
 		try {
@@ -119,13 +173,86 @@ public class SQLManager {
 					+ SQLBase.QUICKSTORAGE
 					+ "` (`key` VARCHAR(255) NOT NULL , `type` VARCHAR(32) NULL DEFAULT 'String' , `value` TEXT NULL , PRIMARY KEY (`key`) , UNIQUE INDEX `key_UNIQUE` (`key` ASC));");
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+			this.reconnect();
 		}
 
-		String statement = "INSERT INTO \'" + schema + "\'.\'"
-				+ SQLBase.QUICKSTORAGE + "\' VALUES (" + key + ", " + datatype
-				+ ", " + value + ")";
+		try {
+			Statement stmt3 = conn.createStatement();
+			stmt3.executeUpdate("INSERT INTO `" + schema + "`.`"
+					+ SQLBase.QUICKSTORAGE + "` VALUES ( \'" + key + "\', \'"
+					+ datatype + "\', \'" + value + "\')");
+		} catch (SQLException e1) {
+			try {
+
+				Statement stmt2 = conn.createStatement();
+				stmt2.executeUpdate("UPDATE `" + schema + "`.`"
+						+ SQLBase.QUICKSTORAGE + "` SET `type`=\'" + datatype
+						+ "\', `value`=\'" + value + "\' WHERE `key`=\'" + key
+						+ "\'");
+			} catch (SQLException e) {
+				Core.sendDebug("Severe sql error");
+			}
+		}
 
 	}
 
+	public enum DataType {
+		INTEGER, FLOAT, DOUBLE, SHORT, LONG, BYTE, STRING
+	}
+
+	public DataType translateNumberToType(Number number) {
+		if (number instanceof Integer) {
+			return DataType.INTEGER;
+		} else {
+			if (number instanceof Float) {
+				return DataType.FLOAT;
+			} else {
+				if (number instanceof Double) {
+					return DataType.DOUBLE;
+				} else {
+					if (number instanceof Short) {
+						return DataType.SHORT;
+					} else {
+						if (number instanceof Long) {
+							return DataType.LONG;
+						} else {
+							if (number instanceof Byte) {
+								return DataType.BYTE;
+							} else {
+								return DataType.STRING;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public Number reconstructNumberFromString(String string, String type) {
+		if (type.equals(DataType.BYTE.name())) {
+			return Byte.parseByte(string);
+		} else {
+			if (type.equals(DataType.DOUBLE.name())) {
+				return Double.parseDouble(string);
+			} else {
+				if (type.equals(DataType.FLOAT.name())) {
+					return Float.parseFloat(string);
+				} else {
+					if (type.equals(DataType.INTEGER.name())) {
+						return Integer.parseInt(string);
+					} else {
+						if (type.equals(DataType.LONG.name())) {
+							return Long.parseLong(string);
+						} else {
+							if (type.equals(DataType.SHORT.name())) {
+								return Short.parseShort(string);
+							} else {
+								return null;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }

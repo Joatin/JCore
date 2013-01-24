@@ -177,7 +177,19 @@ public final class Core extends JavaPlugin implements ICore, Listener, Runnable 
 		} else {
 			Core.sendDebug("Didn't create the sql instance");
 		}
-		SQLManager.getSQL(this).put("hellu", "hello");
+		this.sql.getSQL(this).QuickStoragePrivate().put("string", "hello");
+		this.sql.getSQL(this).QuickStoragePrivate().put("number", 32.001d);
+		Core.sendDebug(this.sql.getSQL(this).QuickStoragePrivate()
+				.getString("string"));
+		try {
+			Core.sendDebug(""
+					+ this.sql.getSQL(this).QuickStoragePrivate()
+							.getNumber("number").doubleValue());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		this.sql.getSQL(this).QuickStoragePrivate().remove("number");
+		this.sql.getSQL(this).QuickStoragePrivate().remove("string");
 
 	}
 
@@ -196,25 +208,26 @@ public final class Core extends JavaPlugin implements ICore, Listener, Runnable 
 	public void onEnable() {
 		// Making a COOOL intro
 
-		this.getServer()
-				.getConsoleSender()
-				.sendMessage(
-						ChatColor.GREEN
-								+ "\n\n"
-								+ ""
-								+ " ============================================================================== \n"
-								+ "\n"
-								+ "         #  #####                 #\n"
-								+ "         #  #                     #                       #\n"
-								+ "         #  #                     #                                     #\n"
-								+ "         #  #     ##### # # ##    #      #####   #   ###  # #   #  #### #\n"
-								+ "         #  #     #   # ## #  #   #      #   #  # #  #  # # ##  # #     #\n"
-								+ "     #   #  #     #   # #  ####   #      #   # ##### #  # # # # # #  ## #\n"
-								+ "     #   #  #     #   # #  #      #      #   # #   # #  # # #  ## #   #\n"
-								+ "      ###   ##### ##### #   ##    ###### ##### #   # ###  # #   #  ###  #\n"
-								+ "\n"
-								+ " ============================================================================== ");
-
+		if (Core.isDebugg()) {
+			this.getServer()
+					.getConsoleSender()
+					.sendMessage(
+							ChatColor.GREEN
+									+ "\n\n"
+									+ ""
+									+ " ============================================================================== \n"
+									+ "\n"
+									+ "         #  #####                 #\n"
+									+ "         #  #                     #                       #\n"
+									+ "         #  #                     #                                     #\n"
+									+ "         #  #     ##### # # ##    #      #####   #   ###  # #   #  #### #\n"
+									+ "         #  #     #   # ## #  #   #      #   #  # #  #  # # ##  # #     #\n"
+									+ "     #   #  #     #   # #  ####   #      #   # ##### #  # # # # # #  ## #\n"
+									+ "     #   #  #     #   # #  #      #      #   # #   # #  # # #  ## #   #\n"
+									+ "      ###   ##### ##### #   ##    ###### ##### #   # ###  # #   #  ###  #\n"
+									+ "\n"
+									+ " ============================================================================== ");
+		}
 		// End of intro
 		this.getServer().getScheduler().runTaskTimer(this, this, 1, 1);
 		this.saveDefaultConfig();
