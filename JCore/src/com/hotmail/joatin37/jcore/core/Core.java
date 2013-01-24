@@ -78,6 +78,8 @@ import com.hotmail.joatin37.jcore.landmanagement.LandHandler;
 import com.hotmail.joatin37.jcore.language.Lang;
 import com.hotmail.joatin37.jcore.language.Lang.LangTag;
 import com.hotmail.joatin37.jcore.metrics.GraphCollector;
+import com.hotmail.joatin37.jcore.sql.SQLInstaller;
+import com.hotmail.joatin37.jcore.sql.SQLInstaller.DataBase;
 import com.hotmail.joatin37.jcore.sql.SQLManager;
 import com.hotmail.joatin37.jcore.util.myLock;
 import com.hotmail.joatin37.jcore.website.ConnectionHandler;
@@ -105,6 +107,7 @@ public final class Core extends JavaPlugin implements ICore, Listener, Runnable 
 	private Economy eco;
 	private PlayerCommandHandler playercommand;
 	private ServerCommandHandler servercommand;
+	private SQLInstaller installer;
 
 	public Core() {
 		DEBUGG = true;
@@ -237,6 +240,7 @@ public final class Core extends JavaPlugin implements ICore, Listener, Runnable 
 		Core.sendDebug(Lang.getConsoleMessageSentence(this, "AA"));
 		this.loadEconomy();
 		this.eco = new Economy(this);
+		this.installer = new SQLInstaller(this, DataBase.MYSQL);
 	}
 
 	@Override

@@ -55,6 +55,7 @@ public class SQLManager {
 	private static SQLManager manager;
 	public final static String QUICKSTORAGE = "quickstorage";
 	public final static String GLOBALQUICKSTORAGE = "globalquickstorage";
+	public final static String GLOBALSCHEMA = "globalschema";
 
 	public SQLManager(Core core) throws SQLException {
 		this.core = core;
@@ -163,6 +164,15 @@ public class SQLManager {
 		}
 	}
 
+	/**
+	 * 
+	 * 
+	 * @param schema
+	 * @param key
+	 * @param datatype
+	 * @param value
+	 * @since JCore 1.0
+	 */
 	public synchronized void doPut(String schema, String key, String datatype,
 			String value) {
 		try {
@@ -200,6 +210,15 @@ public class SQLManager {
 		INTEGER, FLOAT, DOUBLE, SHORT, LONG, BYTE, STRING
 	}
 
+	/**
+	 * Translates the number passed into a DataType enum.
+	 * 
+	 * @param number
+	 *            The number to turn into a enum
+	 * @return The enum that matches the Number
+	 * @since JCore 1.0
+	 * @see Number
+	 */
 	public DataType translateNumberToType(Number number) {
 		if (number instanceof Integer) {
 			return DataType.INTEGER;
