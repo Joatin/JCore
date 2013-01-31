@@ -37,10 +37,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.hotmail.joatin37.jcore.landmanagement.ICollectionManager;
 import com.hotmail.joatin37.jcore.landmanagement.LandHandler;
+import com.hotmail.joatin37.jcore.sql.SQL;
 
 public interface ICore {
 
 	public void addExtension(LandHandler landHandler, JavaPlugin plugin);
 
 	public ICollectionManager getManager();
+
+	public SQL getSQL(JavaPlugin plugin);
 }

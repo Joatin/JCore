@@ -1,4 +1,4 @@
-firststart: True
+firststart: true
 sql:
   enable: false
   username: root

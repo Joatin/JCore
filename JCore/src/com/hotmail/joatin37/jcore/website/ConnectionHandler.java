@@ -40,8 +40,8 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyStore;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RejectedExecutionException;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -55,15 +55,14 @@ public class ConnectionHandler extends Thread {
 	private final String ksName = "keystore.jks";
 	private boolean enabled = false;
 	private WebPageManager manager;
-	private ExecutorService pool;
+	private ForkJoinPool pool;
 	private ServerSocket server;
 	private final int port;
 	private final int backlog;
 
 	public ConnectionHandler(Core core) {
 		this.core = core;
-		this.pool = Executors.newFixedThreadPool(core.getConfig().getInt(
-				"website.maximum", 100));
+		this.pool = new ForkJoinPool();
 		this.port = core.getConfig().getInt("website.port", 80);
 		this.backlog = core.getConfig().getInt("website.backlog", 100);
 		if (core.getConfig().getBoolean("website.enabled", false)) {
@@ -84,8 +83,19 @@ public class ConnectionHandler extends Thread {
 	public void run() {
 		while (true) {
 			try {
-				this.pool.execute(new Handler(this.server.accept()));
+				Socket soc = this.server.accept();
+				if (this.pool.getQueuedSubmissionCount() < this.core
+						.getConfig().getInt("website.maximum", 100)) {
+					this.pool.execute(new Handler(soc));
+				} else {
+					soc.getOutputStream()
+							.write("HTTP/1.1 503 Service Unavailable\r\nServer: JCore\r\nConnection: Close\r\n\r\nThe server can't accept more requests now"
+									.getBytes());
+					soc.close();
+				}
 			} catch (IOException e) {
+			} catch (RejectedExecutionException e) {
+
 			}
 		}
 	}

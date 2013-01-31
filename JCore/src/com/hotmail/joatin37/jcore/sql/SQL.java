@@ -22,4 +22,6 @@ public interface SQL {
 	 */
 	public QuickStorage QuickStoragePrivate();
 
+	public GlobalQuickStorage QuickStorageGlobal();
+
 }
