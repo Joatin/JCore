@@ -48,6 +48,7 @@ public class WebPageManager {
 	private byte[] glyphicons_halflings_png;
 	private byte[] bootstrap_js;
 	private byte[] bootstrap_min_js;
+	private final static String header = "<head><meta charset=\"utf-8\"><title>Carousel Template &middot; Bootstrap</title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><meta name=\"description\" content=\"\"><meta name=\"author\" content=\"\"><link href=\"bootstrap.css\" rel=\"stylesheet\"></head>";
 
 	public WebPageManager(Core core) {
 		this.core = core;
