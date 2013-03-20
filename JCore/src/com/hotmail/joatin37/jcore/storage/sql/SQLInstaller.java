@@ -31,7 +31,7 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore.sql;
+package com.hotmail.joatin37.jcore.storage.sql;
 
 import java.io.BufferedInputStream;
 import java.io.File;

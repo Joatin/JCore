@@ -1,4 +1,4 @@
-package com.hotmail.joatin37.jcore.sql;
+package com.hotmail.joatin37.jcore.storage.sql;
 
 /**
  * A class made for quickly adding and accessing data. All the data put in here

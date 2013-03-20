@@ -31,19 +31,8 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore.core;
+package com.hotmail.joatin37.jcore.storage;
 
-import org.bukkit.plugin.java.JavaPlugin;
+public class EntityStorage {
 
-import com.hotmail.joatin37.jcore.landmanagement.ICollectionManager;
-import com.hotmail.joatin37.jcore.landmanagement.LandHandler;
-import com.hotmail.joatin37.jcore.storage.sql.SQL;
-
-public interface ICore {
-
-	public void addExtension(LandHandler landHandler, JavaPlugin plugin);
-
-	public ICollectionManager getManager();
-
-	public SQL getSQL(JavaPlugin plugin);
 }

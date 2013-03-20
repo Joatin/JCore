@@ -1,6 +1,6 @@
-package com.hotmail.joatin37.jcore.sql;
+package com.hotmail.joatin37.jcore.storage.sql;
 
-import com.hotmail.joatin37.jcore.sql.SQLManager.DataType;
+import com.hotmail.joatin37.jcore.storage.sql.SQLManager.DataType;
 
 public class SQLBase implements SQL {
 

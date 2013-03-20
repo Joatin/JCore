@@ -31,19 +31,56 @@
  * either expressed or implied, of anybody else.
  */
 
-package com.hotmail.joatin37.jcore.core;
+package com.hotmail.joatin37.jcore.storage;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import java.io.File;
+import java.util.UUID;
 
-import com.hotmail.joatin37.jcore.landmanagement.ICollectionManager;
-import com.hotmail.joatin37.jcore.landmanagement.LandHandler;
-import com.hotmail.joatin37.jcore.storage.sql.SQL;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 
-public interface ICore {
+import com.hotmail.joatin37.jcore.core.Core;
+import com.hotmail.joatin37.jcore.core.JCoreExtension;
+import com.hotmail.joatin37.jcore.storage.sql.QuickStorage;
 
-	public void addExtension(LandHandler landHandler, JavaPlugin plugin);
+public final class Storage {
 
-	public ICollectionManager getManager();
+	private static File blockfile;
+	private static File entityfile;
+	private static File guickfile;
+	private static File tempfile;
 
-	public SQL getSQL(JavaPlugin plugin);
+	private static Cache cache = new Cache();
+
+	private static Core core;
+
+	public static void SetCore(Core core) {
+		if (core == null) {
+			throw new NullPointerException();
+		}
+		core = core;
+	}
+
+	public static EntityStorage getEntityStorage(Entity entity) {
+		return null;
+	}
+
+	public static EntityStorage getEntityStorage(UUID uuid) {
+		return null;
+	}
+
+	public static BlockStorage getBlockStorage(Block block) {
+		return null;
+
+	}
+
+	public static BlockStorage getBlockStorage(double x, double y, double z) {
+		return null;
+
+	}
+
+	public static QuickStorage getQuickStorage(JCoreExtension plugin) {
+		return null;
+	}
+
 }

@@ -1,4 +1,4 @@
-package com.hotmail.joatin37.jcore.sql;
+package com.hotmail.joatin37.jcore.storage.sql;
 
 /**
  * A interface that represents a SQL connection. You can use this to manage all

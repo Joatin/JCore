@@ -37,7 +37,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.hotmail.joatin37.jcore.economy.IEconomy;
 import com.hotmail.joatin37.jcore.language.TagReplacer;
-import com.hotmail.joatin37.jcore.sql.SQL;
+import com.hotmail.joatin37.jcore.storage.sql.SQL;
 
 public abstract class JCoreExtension extends JavaPlugin {
 
